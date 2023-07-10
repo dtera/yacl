@@ -27,21 +27,11 @@ else ()
 endif ()
 
 # link libraries for the target
-add_library(${PROJECT_NAME}_lib SHARED ${SOURCES})
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
 #target_sources(${PROJECT_NAME}_lib PRIVATE ${SOURCES})
-target_link_libraries(${PROJECT_NAME}_lib absl_int128 absl_strings absl_symbolize absl_stacktrace tommath fmt
+target_link_libraries(${PROJECT_NAME} absl_int128 absl_strings absl_symbolize absl_stacktrace tommath fmt
         ${EXTRA_LIB})
-
 set(EXE_TARGETS)
-
-# Building bench
-foreach (bench_file ${BENCH_SRCS})
-    string(REPLACE ".cc" "" bench_name ${bench_file})
-    string(REGEX REPLACE "(.*)?/" "" bench_name ${bench_file})
-    add_executable(${PROJECT_NAME}_${bench_name} ${bench_file})
-    target_link_libraries(${PROJECT_NAME}_${bench_name} ${PROJECT_NAME}_lib)
-    list(APPEND EXE_TARGETS ${PROJECT_NAME}_${bench_name})
-endforeach ()
 
 # Building tests
 include(FetchContent)
@@ -54,9 +44,18 @@ FetchContent_MakeAvailable(googletest)
 add_library(GTest::GTest INTERFACE IMPORTED)
 target_link_libraries(GTest::GTest INTERFACE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
 
+# Building bench
+foreach (bench_file ${BENCH_SRCS})
+    string(REPLACE ".cc" "" bench_name ${bench_file})
+    string(REGEX REPLACE "(.*)?/" "" bench_name ${bench_file})
+    add_executable(${PROJECT_NAME}_${bench_name} ${bench_file})
+    target_link_libraries(${PROJECT_NAME}_${bench_name} ${PROJECT_NAME} GTest::GTest)
+    list(APPEND EXE_TARGETS ${PROJECT_NAME}_${bench_name})
+endforeach ()
+
 enable_testing()
 add_executable(${PROJECT_NAME}_tests yacl/tests.cc)
-target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME}_lib
+target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME}
         GTest::GTest
         )
 target_sources(${PROJECT_NAME}_tests PRIVATE ${TEST_SRCS})
