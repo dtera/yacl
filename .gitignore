@@ -48,3 +48,4 @@ external
 
 #brpc
 rpc_data
+cmake-build-*
