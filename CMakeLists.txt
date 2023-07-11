@@ -46,7 +46,7 @@ target_link_libraries(GTest::GTest INTERFACE GTest::gtest GTest::gtest_main GTes
 # Building bench
 foreach (bench_file ${BENCH_SRCS})
     string(REPLACE ".cc" "" bench_name ${bench_file})
-    string(REGEX REPLACE "(.*)?/" "" bench_name ${bench_file})
+    string(REGEX REPLACE "(.*)?/" "" bench_name ${bench_name})
     add_executable(${PROJECT_NAME}_${bench_name} ${bench_file})
     target_link_libraries(${PROJECT_NAME}_${bench_name} ${PROJECT_NAME} ${EXTRA_LIB} GTest::GTest)
     list(APPEND EXE_TARGETS ${PROJECT_NAME}_${bench_name})
