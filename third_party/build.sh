@@ -16,7 +16,7 @@ cd "$CD" || exit
 "$CD"/build_tommath.sh
 
 # build spdlog
-#"$CD"/build_spdlog.sh
+"$CD"/build_spdlog.sh
 
 # build openssl
 #"$CD"/build_openssl.sh
