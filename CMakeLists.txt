@@ -29,8 +29,7 @@ endif ()
 # link libraries for the target
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 #target_sources(${PROJECT_NAME}_lib PRIVATE ${SOURCES})
-target_link_libraries(${PROJECT_NAME} absl_int128 absl_strings absl_symbolize absl_stacktrace tommath fmt
-        ${EXTRA_LIB})
+target_link_libraries(${PROJECT_NAME} absl_int128 absl_strings absl_symbolize absl_stacktrace tommath fmt)
 set(EXE_TARGETS)
 
 # Building tests
@@ -49,7 +48,7 @@ foreach (bench_file ${BENCH_SRCS})
     string(REPLACE ".cc" "" bench_name ${bench_file})
     string(REGEX REPLACE "(.*)?/" "" bench_name ${bench_file})
     add_executable(${PROJECT_NAME}_${bench_name} ${bench_file})
-    target_link_libraries(${PROJECT_NAME}_${bench_name} ${PROJECT_NAME} GTest::GTest)
+    target_link_libraries(${PROJECT_NAME}_${bench_name} ${PROJECT_NAME} ${EXTRA_LIB} GTest::GTest)
     list(APPEND EXE_TARGETS ${PROJECT_NAME}_${bench_name})
 endforeach ()
 

@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+#pragma ide diagnostic ignored "readability-function-cognitive-complexity"
 
 #include "yacl/base/exception.h"
 
