@@ -90,7 +90,7 @@ namespace std {
 
 #if __cplusplus >= 202002L
 #else
-constexpr int128_t abs(int128_t x) { return x >= 0 ? x : -x; }
+//constexpr int128_t abs(int128_t x) { return x >= 0 ? x : -x; }
 #endif
 
 constexpr int128_t abs(uint128_t x) { return x; }
