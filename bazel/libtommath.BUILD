@@ -27,6 +27,7 @@ yacl_cmake_external(
         "CMAKE_INSTALL_LIBDIR": "lib",
         "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
     },
+    copts = ["-Wno-error"],
     lib_source = ":all_srcs",
     out_static_libs = ["libtommath.a"],
 )

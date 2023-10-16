@@ -19,13 +19,12 @@
 #include "gtest/gtest.h"
 
 #include "yacl/base/exception.h"
-#include "yacl/crypto/base/mpint/mp_int.h"
+#include "yacl/math/mpint/mp_int.h"
 
 namespace yacl::crypto::test {
 
 TEST(KeyTest, Test1) {
-  MPInt zero(0);
-  std::unique_ptr<EcGroup> ecc_group = EcGroupFactory::Create("sm2");
+  std::unique_ptr<EcGroup> ecc_group = EcGroupFactory::Instance().Create("sm2");
 
   Keys keys;
   std::pair<Keys::PublicKey, Keys::PrivateKey> key_pair_alice =
@@ -62,7 +61,7 @@ TEST(KeyTest, Test1) {
                          key_pair_bob.first, 5, 4);
 
   for (int i = 0; i < 5; i++) {
-    EXPECT_TRUE(kfrags[i].id > zero);
+    EXPECT_TRUE(kfrags[i].id > 0_mp);
   }
 }
 }  // namespace yacl::crypto::test

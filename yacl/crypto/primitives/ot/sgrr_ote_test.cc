@@ -24,8 +24,8 @@
 
 #include "yacl/base/exception.h"
 #include "yacl/crypto/primitives/ot/ot_store.h"
-#include "yacl/crypto/utils/math.h"
 #include "yacl/link/test_util.h"
+#include "yacl/math/gadget.h"
 
 namespace yacl::crypto {
 
@@ -40,7 +40,7 @@ TEST_P(SgrrParamTest, Works) {
 
   auto index = RandInRange(n);
   auto lctxs = link::test::SetupWorld(2);
-  auto base_ot = MockRots(Log2Ceil(n));  // mock many base OTs
+  auto base_ot = MockRots(math::Log2Ceil(n));  // mock many base OTs
 
   std::vector<uint128_t> send_out(n);
   std::vector<uint128_t> recv_out(n);

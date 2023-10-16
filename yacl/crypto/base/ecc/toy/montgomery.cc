@@ -48,7 +48,7 @@ std::string ToyXGroup::ToString() const {
                      params_.A, params_.p);
 }
 
-EcPoint ToyXGroup::Add(const EcPoint &p1, const EcPoint &p2) const {
+EcPoint ToyXGroup::Add(const EcPoint &, const EcPoint &) const {
   YACL_THROW(
       "{} from {} do not support Add, because p1, p2 only has X-coordinate",
       GetCurveName(), GetLibraryName());
@@ -106,6 +106,12 @@ EcPoint ToyXGroup::Negate(const EcPoint &point) const {
   return Mul(point, params_.n - 1_mp);
 }
 
+uint64_t ToyXGroup::GetSerializeLength(PointOctetFormat format) const {
+  YACL_ENFORCE(format == PointOctetFormat::Autonomous,
+               "Toy lib does not support {} format", (int)format);
+  return params_.G.GetSerializeLength();
+}
+
 Buffer ToyXGroup::SerializePoint(const EcPoint &point,
                                  PointOctetFormat format) const {
   YACL_ENFORCE(format == PointOctetFormat::Autonomous,
@@ -117,6 +123,14 @@ Buffer ToyXGroup::SerializePoint(const EcPoint &point,
 void ToyXGroup::SerializePoint(const EcPoint &point, PointOctetFormat format,
                                Buffer *buf) const {
   *buf = SerializePoint(point, format);
+}
+
+void ToyXGroup::SerializePoint(const EcPoint &point, PointOctetFormat format,
+                               uint8_t *buf, uint64_t buf_size) const {
+  YACL_ENFORCE(format == PointOctetFormat::Autonomous,
+               "Toy lib does not support {} format", (int)format);
+  const auto &op = std::get<AffinePoint>(point);
+  op.SerializePoint(buf, buf_size);
 }
 
 EcPoint ToyXGroup::DeserializePoint(ByteContainerView buf,

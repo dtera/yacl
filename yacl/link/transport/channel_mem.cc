@@ -16,9 +16,10 @@
 
 #include "yacl/base/exception.h"
 
-namespace yacl::link {
+namespace yacl::link::transport {
 
-ChannelMem::ChannelMem(size_t self_rank, size_t peer_rank, size_t timeout_ms)
+ChannelMem::ChannelMem(size_t /*self_rank*/, size_t /*peer_rank*/,
+                       size_t timeout_ms)
     : recv_timeout_ms_(timeout_ms * std::chrono::milliseconds(1)) {}
 
 void ChannelMem::SetPeer(const std::shared_ptr<ChannelMem>& peer_task) {
@@ -64,4 +65,4 @@ void ChannelMem::OnMessage(const std::string& msg_key,
   msg_db_cond_.notify_all();
 }
 
-}  // namespace yacl::link
+}  // namespace yacl::link::transport

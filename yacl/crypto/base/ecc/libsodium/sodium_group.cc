@@ -23,9 +23,9 @@
 #include "fmt/format.h"
 #include "sodium/private/ed25519_ref10.h"
 
-#include "yacl/crypto/base/ecc/ec_point.h"
-#include "yacl/crypto/base/mpint/mp_int.h"
-#include "yacl/crypto/base/mpint/type_traits.h"
+#include "yacl/base/int128.h"
+#include "yacl/math/mpint/mp_int.h"
+#include "yacl/utils/spi/type_traits.h"
 
 namespace yacl::crypto::sodium {
 
@@ -121,6 +121,13 @@ EcPoint SodiumGroup::CopyPoint(const EcPoint& point) const {
   YACL_THROW("Unsupported EcPoint type {}", point.index());
 }
 
+uint64_t SodiumGroup::GetSerializeLength(PointOctetFormat format) const {
+  YACL_ENFORCE(format == PointOctetFormat::Autonomous,
+               "{} only support Autonomous format, given={}", GetLibraryName(),
+               (int)format);
+  return 32;
+}
+
 Buffer SodiumGroup::SerializePoint(const EcPoint& point,
                                    PointOctetFormat format) const {
   YACL_ENFORCE(format == PointOctetFormat::Autonomous,
@@ -137,6 +144,15 @@ void SodiumGroup::SerializePoint(const EcPoint& point, PointOctetFormat format,
   *buf = SerializePoint(point, format);
 }
 
+void SodiumGroup::SerializePoint(const EcPoint& point, PointOctetFormat format,
+                                 uint8_t* buf, uint64_t buf_size) const {
+  YACL_ENFORCE(format == PointOctetFormat::Autonomous,
+               "{} only support Autonomous format, given={}", GetLibraryName(),
+               (int)format);
+  YACL_ENFORCE(buf_size >= 32, "buf size is small than needed 32");
+  ge25519_p3_tobytes(buf, CastP3(point));
+}
+
 EcPoint SodiumGroup::DeserializePoint(ByteContainerView buf,
                                       PointOctetFormat format) const {
   YACL_ENFORCE(format == PointOctetFormat::Autonomous,
@@ -148,19 +164,23 @@ EcPoint SodiumGroup::DeserializePoint(ByteContainerView buf,
   return p;
 }
 
-EcPoint SodiumGroup::HashToCurve(HashToCurveStrategy strategy,
-                                 std::string_view str) const {
+EcPoint SodiumGroup::HashToCurve(HashToCurveStrategy, std::string_view) const {
   YACL_THROW("not impl");
 }
 
 size_t SodiumGroup::HashPoint(const EcPoint& point) const {
   const auto* p3 = CastP3(point);
   fe25519 recip;
-  fe25519 x;
+  fe25519 x;  // x is uint64[5], and every slot only uses 51 bits.
 
   fe25519_invert(recip, p3->Z);
   fe25519_mul(x, p3->X, recip);
-  return std::hash<std::string_view>()({reinterpret_cast<char*>(x), sizeof(x)});
+
+  uint64_t buf[4];  // x is always 255 bits
+  fe25519_tobytes(reinterpret_cast<unsigned char*>(buf), x);
+
+  std::hash<uint64_t> h;
+  return h(buf[0]) ^ h(buf[1]) ^ h(buf[2]) ^ h(buf[3]);
 }
 
 bool SodiumGroup::PointEqual(const EcPoint& p1, const EcPoint& p2) const {
@@ -185,12 +205,11 @@ bool SodiumGroup::PointEqual(const EcPoint& p1, const EcPoint& p2) const {
 
   fe25519_mul(a, p1p->Y, p2p->Z);
   fe25519_mul(b, p1p->Z, p2p->Y);
-  for (size_t i = 0; i < sizeof(fe25519) / sizeof(a[0]); ++i) {
-    if (a[i] != b[i]) {
-      return false;
-    }
-  }
-  return true;
+  int128_t buf_a[2];
+  int128_t buf_b[2];
+  fe25519_tobytes(reinterpret_cast<unsigned char*>(buf_a), a);
+  fe25519_tobytes(reinterpret_cast<unsigned char*>(buf_b), b);
+  return buf_a[0] == buf_b[0] && buf_a[1] == buf_b[1];
 }
 
 const ge25519_p3* SodiumGroup::CastP3(const yacl::crypto::EcPoint& p) {

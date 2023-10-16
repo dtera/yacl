@@ -60,7 +60,7 @@ void Sm4Drbg::Instantiate(ByteContainerView personal_string) {
   seed_material_ = RngDf(seed_material_);
 
   std::memset(key_.data(), 0, key_.size());
-  std::memset(v_.data(), 0, key_.size());
+  std::memset(v_.data(), 0, v_.size());
 
   const EVP_CIPHER* cipher = GetEvpCipher(crypto_type_);
 
@@ -208,7 +208,7 @@ void Sm4Drbg::RngUpdate() {
   return;
 }
 
-void Sm4Drbg::ReSeed(absl::Span<const uint8_t> seed,
+void Sm4Drbg::ReSeed(absl::Span<const uint8_t> /*seed*/,
                      absl::Span<const uint8_t> additional_input) {
   min_entropy_ = min_length_;
   entropy_input_ = entropy_source_->GetEntropy(min_entropy_);
@@ -244,8 +244,6 @@ std::vector<uint8_t> Sm4Drbg::Generate(
   YACL_ENFORCE(rand_length <= kBlockSize);
 
   if (reseed_counter_ > reseed_interval_) {
-    entropy_input_ = entropy_source_->GetEntropy(min_entropy_);
-
     ReSeed(absl::MakeSpan(reinterpret_cast<uint8_t*>(entropy_input_.data()),
                           entropy_input_.length()),
            additional_input);

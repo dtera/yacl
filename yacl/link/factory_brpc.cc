@@ -12,13 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <memory>
+
 #include "absl/strings/match.h"
 #include "butil/logging.h"
 #include "gflags/gflags.h"
 
 #include "yacl/base/exception.h"
 #include "yacl/link/factory.h"
-#include "yacl/link/transport/channel_brpc.h"
+#include "yacl/link/transport/brpc_link.h"
+#include "yacl/link/transport/channel.h"
 
 namespace brpc::policy {
 DECLARE_int32(h2_client_stream_window_size);
@@ -32,47 +35,38 @@ std::shared_ptr<Context> FactoryBrpc::CreateContext(const ContextDesc& desc,
   // Under release build, set logging to one level above waring
   logging::SetMinLogLevel(logging::BLOG_WARNING + 1);
 #endif
+  if (desc.link_type != "normal") {
+    return FactoryBrpcBlackBox().CreateContext(desc, self_rank);
+  }
+
   const size_t world_size = desc.parties.size();
   if (self_rank >= world_size) {
     YACL_THROW_LOGIC_ERROR("invalid self rank={}, world_size={}", self_rank,
                            world_size);
   }
 
-  auto msg_loop = std::make_unique<ReceiverLoopBrpc>();
-  std::vector<std::shared_ptr<IChannel>> channels(world_size);
+  auto opts = transport::BrpcLink::GetDefaultOptions();
+  opts = transport::BrpcLink::MakeOptions(
+      opts, desc.http_timeout_ms, desc.http_max_payload_size,
+      desc.brpc_channel_protocol, desc.brpc_channel_connection_type,
+      desc.brpc_retry_count, desc.brpc_retry_interval_ms,
+      desc.brpc_aggressive_retry);
+
+  auto msg_loop = std::make_unique<transport::ReceiverLoopBrpc>();
+  std::vector<std::shared_ptr<transport::IChannel>> channels(world_size);
   for (size_t rank = 0; rank < world_size; rank++) {
     if (rank == self_rank) {
       continue;
     }
 
-    ChannelBrpc::Options opts;
-    opts.http_timeout_ms = desc.http_timeout_ms;
-    opts.http_max_payload_size = desc.http_max_payload_size;
-    opts.channel_protocol = desc.brpc_channel_protocol;
+    auto delegate =
+        std::make_shared<transport::BrpcLink>(self_rank, rank, opts);
+    delegate->SetPeerHost(desc.parties[rank].host,
+                          desc.enable_ssl ? &desc.client_ssl_opts : nullptr);
 
-    if (absl::StartsWith(opts.channel_protocol, "h2")) {
-      YACL_ENFORCE(opts.http_max_payload_size > 4096,
-                   "http_max_payload_size is too small");
-      YACL_ENFORCE(
-          opts.http_max_payload_size < std::numeric_limits<int32_t>::max(),
-          "http_max_payload_size is too large");
-      // if use h2 protocol (h2 or h2:grpc), need to change h2 window size too,
-      // use http_max_payload_size as h2's window size, then reserve 4kb buffer
-      // for protobuf header
-      brpc::policy::FLAGS_h2_client_stream_window_size =
-          static_cast<int32_t>(opts.http_max_payload_size);
-      opts.http_max_payload_size -= 4096;
-    }
-
-    if (!desc.brpc_channel_connection_type.empty()) {
-      opts.channel_connection_type = desc.brpc_channel_connection_type;
-    }
-    auto channel = std::make_shared<ChannelBrpc>(
-        self_rank, rank, desc.recv_timeout_ms, opts, desc.exit_if_async_error);
-    channel->SetPeerHost(desc.parties[rank].host,
-                         desc.enable_ssl ? &desc.client_ssl_opts : nullptr);
+    auto channel = std::make_shared<transport::Channel>(
+        delegate, desc.recv_timeout_ms, desc.exit_if_async_error);
     channel->SetThrottleWindowSize(desc.throttle_window_size);
-
     msg_loop->AddListener(rank, channel);
     channels[rank] = std::move(channel);
   }

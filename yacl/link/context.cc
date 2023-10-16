@@ -19,6 +19,7 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
+#include <utility>
 
 #include "fmt/format.h"
 #include "spdlog/spdlog.h"
@@ -63,8 +64,9 @@ void Context::PrintStats() { std::cout << *stats_; }
 std::shared_ptr<const Statistics> Context::GetStats() const { return stats_; }
 
 Context::Context(ContextDesc desc, size_t rank,
-                 std::vector<std::shared_ptr<IChannel>> channels,
-                 std::shared_ptr<IReceiverLoop> msg_loop, bool is_sub_world)
+                 std::vector<std::shared_ptr<transport::IChannel>> channels,
+                 std::shared_ptr<transport::IReceiverLoop> msg_loop,
+                 bool is_sub_world)
     : desc_(std::move(desc)),
       rank_(rank),
       channels_(std::move(channels)),
@@ -87,6 +89,13 @@ Context::Context(ContextDesc desc, size_t rank,
 
   stats_ = std::make_shared<Statistics>();
 }
+
+Context::Context(const ContextDescProto& desc_pb, size_t rank,
+                 std::vector<std::shared_ptr<transport::IChannel>> channels,
+                 std::shared_ptr<transport::IReceiverLoop> msg_loop,
+                 bool is_sub_world)
+    : Context(ContextDesc(desc_pb), rank, std::move(channels),
+              std::move(msg_loop), is_sub_world) {}
 
 std::string Context::Id() const { return desc_.id; }
 
@@ -357,7 +366,8 @@ std::unique_ptr<Context> Context::SubWorld(
     }
   }
 
-  std::vector<std::shared_ptr<IChannel>> channels(sub_party_ids.size());
+  std::vector<std::shared_ptr<transport::IChannel>> channels(
+      sub_party_ids.size());
   for (size_t i = 0; i < sub_party_ids.size(); i++) {
     channels[i] = channels_[orig_ranks[i]];
   }
@@ -377,7 +387,8 @@ std::string Context::NextP2PId(size_t src_rank, size_t dst_rank) {
                      src_rank, dst_rank);
 }
 
-std::shared_ptr<IChannel> Context::GetChannel(size_t src_rank) const {
+std::shared_ptr<transport::IChannel> Context::GetChannel(
+    size_t src_rank) const {
   YACL_ENFORCE(src_rank < WorldSize(), "unexpected rank={} with world_size={}",
                src_rank, WorldSize());
   return channels_[src_rank];
