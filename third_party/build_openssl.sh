@@ -27,7 +27,7 @@ else
   exit 1
 fi
 
-make -j4
+make -j8
 make install_sw
 make install_ssldirs
 

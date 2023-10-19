@@ -68,7 +68,7 @@ if [ "${min_ver%\.*}" -gt 35 ]; then
     -Dprotobuf_BUILD_TESTS=OFF \
     -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
     -DCMAKE_INSTALL_PREFIX="$install_prefix" ../..
-  make -j 8 && make install
+  make -j8 && make install
   popd || exit
   cd - && cd ..
 else
@@ -76,31 +76,31 @@ else
   printf "Trying to install abseil...\n"
   mkdir -p third_party/abseil-cpp/cmake/build && cd third_party/abseil-cpp/cmake/build || exit
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
-    -DCMAKE_INSTALL_PREFIX="$install_prefix" ../.. && make -j4 install && cd - || exit
+    -DCMAKE_INSTALL_PREFIX="$install_prefix" ../.. && make -j8 install && cd - || exit
 
   # Install c-ares
   # If the distribution provides a new-enough version of c-ares, this section can be replaced with:
   # apt-get install -y libc-ares-dev
   printf "Trying to install cares...\n"
   mkdir -p third_party/cares/cares/cmake/build && cd third_party/cares/cares/cmake/build || exit
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$install_prefix" ../.. && make -j4 install && cd - || exit
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$install_prefix" ../.. && make -j8 install && cd - || exit
 
   # Install protobuf
   printf "Trying to install protobuf...\n"
   mkdir -p third_party/protobuf/cmake/build && cd third_party/protobuf/cmake/build || exit
   cmake -Dprotobuf_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX="$install_prefix" .. && make -j4 install && cd - || exit
+    -DCMAKE_INSTALL_PREFIX="$install_prefix" .. && make -j8 install && cd - || exit
 
   # Install re2
   printf "Trying to install re2...\n"
   mkdir -p third_party/re2/cmake/build && cd third_party/re2/cmake/build || exit
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
-    -DCMAKE_INSTALL_PREFIX="$install_prefix" ../.. && make -j4 install && cd - || exit
+    -DCMAKE_INSTALL_PREFIX="$install_prefix" ../.. && make -j8 install && cd - || exit
 
   # Install zlib
   printf "Trying to install zlib...\n"
   mkdir -p third_party/zlib/cmake/build && cd third_party/zlib/cmake/build || exit
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$install_prefix" ../.. && make -j4 install && cd - || exit
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$install_prefix" ../.. && make -j8 install && cd - || exit
 
   # Install gRPC
   printf "Trying to install gRPC...\n"
@@ -116,7 +116,7 @@ else
     -DgRPC_SSL_PROVIDER=package \
     -DgRPC_ZLIB_PROVIDER=package \
     -DCMAKE_INSTALL_PREFIX="$install_prefix"
-  ../.. && make -j4 install && cd - || exit
+  ../.. && make -j8 install && cd - || exit
 fi
 rm -rf $prefix && ln -s "$install_prefix" $prefix
 #cp -R $prefix/include/* $CD/include && cp -R $prefix/lib/* $CD/lib
