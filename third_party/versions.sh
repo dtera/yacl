@@ -5,6 +5,7 @@ cd "$CD" || exit
 
 absl_ver=20230125.3
 fmt_ver=10.0.0
+msgpack_ver=3.3.0
 openssl_ver=1_1_1v
 spdlog_ver=1.12.0
 libtommath_ver=7f96509df1a6b44867bbda56bbf2cb92524be8ef

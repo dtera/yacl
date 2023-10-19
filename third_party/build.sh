@@ -37,4 +37,4 @@ sh "$CD"/build_curve25519.sh
 #sh "$CD"/build_grpc.sh $grpc_ver
 
 cd "$CD" || exit
-rm -rf lib/cmake && rm -rf lib/pkgconfig && rm -rf lib/engines-1.1
+rm -rf bin && rm -rf share && rm -rf ssl && rm -rf lib/cmake && rm -rf lib/pkgconfig && rm -rf lib/engines-1.1
