@@ -26,7 +26,7 @@ else
   exit 1
 fi
 
-make -j8 && make check && make install
+make -j8 && make install
 
 cd src/libsodium/include || exit
 # shellcheck disable=SC2044

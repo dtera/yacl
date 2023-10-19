@@ -11,7 +11,7 @@ pkg=abseil-cpp-"$absl_ver"
 rm -rf "$pkg" && tar xvf src/"$pkg".tar.gz && cd "$pkg" && mkdir build && cd build || exit
 cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DABSL_PROPAGATE_CXX_STD=ON -DCMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX="$CD/" ..
 #cmake --build . --target strings symbolize stacktrace
-make -j8 strings symbolize stacktrace span && make install
+make -j8 strings symbolize stacktrace && make install
 cd "$CD" || exit
 #for libs in "$CD"/build/libs/libabsl_*; do
 #  [[ "$libs" =~ "strings" ]] || [[ "$libs" =~ "symbolize" ]] || [[ "$libs" =~ "stacktrace" ]] || rm -f "$libs"
