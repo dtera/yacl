@@ -4,18 +4,17 @@ project(yacl VERSION 1.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-file(GLOB SOURCES yacl/base/*.cc yacl/crypto/base/mpint/*.cc yacl/utils/parallel_*.cc yacl/utils/thread_pool.cc)
-file(GLOB TEST_SRCS yacl/base/*_test.cc yacl/crypto/base/mpint/*_test.cc yacl/utils/parallel_test.cc)
-file(GLOB BENCH_SRCS yacl/base/*_bench.cc yacl/crypto/base/mpint/benchmark/mpint_bench.cc)
-list(REMOVE_ITEM SOURCES ${TEST_SRCS} ${BENCH_SRCS})
-list(REMOVE_ITEM TEST_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/yacl/base/dynamic_bitset_test.cc)
-list(REMOVE_ITEM BENCH_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/yacl/base/block_bench.cc)
-
-# include directories and link libraries
-include_directories(. third_party/include)
-link_directories(third_party/lib)
+option(GE_M1_CHIP "WHETHER M1 CHIP" ON)
 set(EXTRA_LIB)
+
+# brew install grpc
 if (APPLE)
+    if (GE_M1_CHIP)
+        set(OPT_PATH /opt/homebrew/opt)
+    else ()
+        set(OPT_PATH /usr/local/opt)
+    endif ()
+    set(GRPC_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/grpc)  # ${OPT_PATH}/grpc
     find_package(benchmark REQUIRED)
     find_package(gflags REQUIRED)
     execute_process(COMMAND brew --prefix libomp OUTPUT_VARIABLE BREW_libomp_PREFIX OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -23,13 +22,62 @@ if (APPLE)
     link_libraries(${BREW_libomp_PREFIX}/lib/libomp.dylib)
     list(APPEND EXTRA_LIB benchmark::benchmark gflags)
 else ()
+    set(GRPC_ROOT_DIR /usr/local/grpc)
+    set(CMAKE_INSTALL_RPATH "${GRPC_ROOT_DIR}/lib")
     link_directories(third_party/lib64)
 endif ()
+#set(CMAKE_LOCAL "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+#list(APPEND CMAKE_MODULE_PATH ${CMAKE_LOCAL}/modules)
+include(cmake/FindGRPC.cmake)
+include(cmake/FindProtobuf.cmake)
 
+#foreach (pkg Protobuf)
+#    string(REGEX REPLACE "(:(.*)?)|(Opt@)" "" pkg_name ${pkg})
+#    string(REGEX MATCH ":(.*)?$" f1 ${pkg})
+#    string(FIND ${pkg} "Opt@" f2)
+#    set(c "")
+#    set(r "")
+#    if (NOT ${f1} STREQUAL "")
+#        string(REGEX REPLACE "(.*)?:" "" c ${pkg})
+#        string(REGEX REPLACE "," ";" c ${c})
+#    endif ()
+#    if (${f2} STREQUAL -1)
+#        set(r "REQUIRED")
+#    endif ()
+#    find_package(${pkg_name} ${c} ${r})
+#endforeach ()
+
+# source files
+file(GLOB_RECURSE SOURCES yacl/*.cc)
+file(GLOB_RECURSE TEST_SRCS yacl/*test*.cc)
+file(GLOB_RECURSE BENCH_SRCS yacl/*bench*.cc)
+file(GLOB_RECURSE RM_SRCS yacl/base/dynamic_bitset_test.cc yacl/link/*
+        yacl/crypto/base/drbg/intel_entropy_source.* yacl/crypto/primitives/ot/* yacl/crypto/primitives/dpf/*.cc
+        yacl/crypto/base/ecc/libsodium/*.cc yacl/crypto/base/test/alg_data_test.cc
+        yacl/io/kv/*kvstore*.cc yacl/utils/serialize.*)
+list(REMOVE_ITEM SOURCES ${TEST_SRCS} ${BENCH_SRCS} ${RM_SRCS})
+list(REMOVE_ITEM TEST_SRCS ${RM_SRCS})
+list(REMOVE_ITEM BENCH_SRCS ${RM_SRCS})
+
+# config auto generated for protobuf
+file(GLOB_RECURSE PROTOS yacl/*.proto)
+file(GLOB_RECURSE RM_PROTOS yacl/crypto/primitives/dpf/*.proto yacl/link/*.proto yacl/utils/*.proto)
+list(REMOVE_ITEM PROTOS ${RM_PROTOS})
+set(PROTO_GENERATED_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/proto-generated)
+file(MAKE_DIRECTORY ${PROTO_GENERATED_DIR})
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_GENERATED_DIR} ${PROTOS})
+grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_GENERATED_DIR} ${PROTOS})
+
+# include directories and link libraries
+include_directories(. third_party/include third_party/include/sodium ${PROTO_GENERATED_DIR})
+link_directories(third_party/lib)
+
+set(ABSL_LIB absl_int128 absl_strings absl_symbolize absl_stacktrace absl_throw_delegate)
 # link libraries for the target
-add_library(${PROJECT_NAME} SHARED ${SOURCES})
+add_library(${PROJECT_NAME} SHARED ${SOURCES} ${PROTO_SRCS}) #${GRPC_SRCS}
 #target_sources(${PROJECT_NAME}_lib PRIVATE ${SOURCES})
-target_link_libraries(${PROJECT_NAME} absl_int128 absl_strings absl_symbolize absl_stacktrace tommath fmt)
+target_link_libraries(${PROJECT_NAME} ${ABSL_LIB} # protobuf::libprotobuf protobuf::libprotobuf-lite
+        tommath fmt ssl crypto blake3 sodium curve25519)
 set(EXE_TARGETS)
 
 # Building tests
@@ -53,18 +101,28 @@ foreach (bench_file ${BENCH_SRCS})
 endforeach ()
 
 enable_testing()
+
+# Building special target
+add_executable(alg_data_test ${CMAKE_CURRENT_SOURCE_DIR}/yacl/crypto/base/test/alg_data_test.cc)
+target_link_libraries(alg_data_test ${PROJECT_NAME} GTest::GTest)
+list(APPEND EXE_TARGETS alg_data_test)
+
+# Building tests
 add_executable(${PROJECT_NAME}_tests yacl/tests.cc)
 target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME}
-        GTest::GTest
-        )
+        ${EXTRA_LIB} GTest::GTest
+)
 target_sources(${PROJECT_NAME}_tests PRIVATE ${TEST_SRCS})
 list(APPEND EXE_TARGETS ${PROJECT_NAME}_tests)
 
+# Print all targets
 foreach (target ${EXE_TARGETS})
     message("target: ${target}")
 endforeach ()
+
+# Set target properties
 set_target_properties(${EXE_TARGETS} PROPERTIES
         CXX_STANDARD ${CMAKE_CXX_STANDARD}
         CXX_EXTENSIONS OFF
         CXX_STANDARD_REQUIRED ON
-        )
+)

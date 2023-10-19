@@ -51,3 +51,4 @@ rpc_data
 cmake-build-*
 /third_party/include/
 /third_party/lib/
+/third_party/proto-generated/

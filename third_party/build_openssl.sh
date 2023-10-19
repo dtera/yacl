@@ -2,11 +2,14 @@
 
 CD=$(cd "$(dirname "$0")" || exit && pwd)
 cd "$CD" || exit
+. "$CD"/versions.sh
 
 # build openssl
-# [ -d OpenSSL_1_1_1m ] || wget https://github.com/openssl/openssl/archive/refs/tags/OpenSSL_1_1_1m.tar.gz
-pkg=openssl-1.1.1m
-rm -rf "$pkg" && tar xvf "$pkg".tar.gz && cd "$pkg" || exit 0
+# [ -d OpenSSL_"$openssl_ver" ] || git clone https://github.com/openssl/openssl.git
+pkg=OpenSSL_"$openssl_ver"
+dir=openssl-OpenSSL_"$openssl_ver"
+[ -f src/"$pkg".tar.gz ] || curl https://github.com/openssl/openssl/archive/refs/tags/"$pkg".tar.gz -L -o src/"$pkg".tar.gz
+rm -rf "$pkg" && tar xvf src/"$pkg".tar.gz && mv "$dir" "$pkg" && cd "$pkg" || exit 0
 
 arch_name=$(arch)
 if [[ "$OSTYPE" == "darwin"* ]]; then
