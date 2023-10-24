@@ -50,7 +50,6 @@ cd "$CD"/src/grpc || exit
 #git submodule update --init
 #prefix=/usr/local/grpc
 prefix="$CD"/grpc
-install_prefix=$prefix-$ver
 #rm -rf "$install_prefix"
 min_ver=${ver#*\.}
 #if [ "$ver" == "1.35.0" ]; then
@@ -67,7 +66,7 @@ if [ "${min_ver%\.*}" -gt 35 ]; then
     -DgRPC_BUILD_TESTS=OFF \
     -Dprotobuf_BUILD_TESTS=OFF \
     -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
-    -DCMAKE_INSTALL_PREFIX="$install_prefix" ../..
+    -DCMAKE_INSTALL_PREFIX="$prefix" ../..
   make -j8 && make install
   popd || exit
   cd - && cd ..
@@ -76,31 +75,31 @@ else
   printf "Trying to install abseil...\n"
   mkdir -p third_party/abseil-cpp/cmake/build && cd third_party/abseil-cpp/cmake/build || exit
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
-    -DCMAKE_INSTALL_PREFIX="$install_prefix" ../.. && make -j8 install && cd - || exit
+    -DCMAKE_INSTALL_PREFIX="$prefix" ../.. && make -j8 install && cd - || exit
 
   # Install c-ares
   # If the distribution provides a new-enough version of c-ares, this section can be replaced with:
   # apt-get install -y libc-ares-dev
   printf "Trying to install cares...\n"
   mkdir -p third_party/cares/cares/cmake/build && cd third_party/cares/cares/cmake/build || exit
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$install_prefix" ../.. && make -j8 install && cd - || exit
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$prefix" ../.. && make -j8 install && cd - || exit
 
   # Install protobuf
   printf "Trying to install protobuf...\n"
   mkdir -p third_party/protobuf/cmake/build && cd third_party/protobuf/cmake/build || exit
   cmake -Dprotobuf_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX="$install_prefix" .. && make -j8 install && cd - || exit
+    -DCMAKE_INSTALL_PREFIX="$prefix" .. && make -j8 install && cd - || exit
 
   # Install re2
   printf "Trying to install re2...\n"
   mkdir -p third_party/re2/cmake/build && cd third_party/re2/cmake/build || exit
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE \
-    -DCMAKE_INSTALL_PREFIX="$install_prefix" ../.. && make -j8 install && cd - || exit
+    -DCMAKE_INSTALL_PREFIX="$prefix" ../.. && make -j8 install && cd - || exit
 
   # Install zlib
   printf "Trying to install zlib...\n"
   mkdir -p third_party/zlib/cmake/build && cd third_party/zlib/cmake/build || exit
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$install_prefix" ../.. && make -j8 install && cd - || exit
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$prefix" ../.. && make -j8 install && cd - || exit
 
   # Install gRPC
   printf "Trying to install gRPC...\n"
@@ -115,10 +114,10 @@ else
     -DgRPC_RE2_PROVIDER=package \
     -DgRPC_SSL_PROVIDER=package \
     -DgRPC_ZLIB_PROVIDER=package \
-    -DCMAKE_INSTALL_PREFIX="$install_prefix"
+    -DCMAKE_INSTALL_PREFIX="$prefix"
   ../.. && make -j8 install && cd - || exit
 fi
-rm -rf $prefix && ln -s "$install_prefix" $prefix
+#rm -rf $prefix && ln -s "$install_prefix" $prefix
 #cp -R $prefix/include/* $CD/include && cp -R $prefix/lib/* $CD/lib
 #grep -q 'export LD_LIBRARY_PATH' ~/.bashrc || export LD_LIBRARY_PATH="/usr/local/grpc/lib:/usr/local/grpc/lib64:$LD_LIBRARY_PATH"
 #grep -q 'export LDFLAGS' ~/.bashrc || export LDFLAGS="-Wl,--copy-dt-needed-entries"

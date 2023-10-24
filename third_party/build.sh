@@ -2,6 +2,7 @@
 
 CD=$(cd "$(dirname "$0")" || exit && pwd)
 cd "$CD" || exit
+[ -d src ] || mkdir src
 
 # build absl
 sh "$CD"/build_absl.sh
@@ -25,7 +26,7 @@ sh "$CD"/build_openssl.sh
 sh "$CD"/build_blake3.sh
 
 # build libsodium
-sh "$CD"/build_libsodium.sh
+sh "$CD"/build_libsodium_cmake.sh
 
 # build curve25519
 sh "$CD"/build_curve25519.sh

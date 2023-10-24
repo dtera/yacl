@@ -37,5 +37,15 @@ for path in $(find sodium/private -name "*.h"); do
   mkdir -p "$head_save_path" && cp "$path" "$head_save_path"
 done
 
+cd ../.. || exit
+# shellcheck disable=SC2044
+for path in $(find libsodium -name "*.h"); do
+  [[ "$path" == "libsodium/include"* ]] && continue
+  #head_file=${path##*/}
+  head_path=${path%/*}
+  head_save_path="$CD"/include/$head_path
+  mkdir -p "$head_save_path" && cp "$path" "$head_save_path"
+done
+
 cd "$CD" && rm -rf "$CD"/lib/libsodium.la || exit
 rm -rf "$pkg"

@@ -53,7 +53,7 @@ file(GLOB_RECURSE TEST_SRCS yacl/*test*.cc)
 file(GLOB_RECURSE BENCH_SRCS yacl/*bench*.cc)
 file(GLOB_RECURSE RM_SRCS yacl/base/dynamic_bitset_test.cc yacl/link/*
         yacl/crypto/base/drbg/intel_entropy_source.* yacl/crypto/primitives/ot/* yacl/crypto/primitives/dpf/*.cc
-        yacl/crypto/base/ecc/libsodium/*.cc yacl/crypto/base/test/alg_data_test.cc
+        yacl/crypto/base/test/alg_data_test.cc # yacl/crypto/base/ecc/libsodium/*.cc
         yacl/io/kv/*kvstore*.cc yacl/utils/serialize.*)
 list(REMOVE_ITEM SOURCES ${TEST_SRCS} ${BENCH_SRCS} ${RM_SRCS})
 list(REMOVE_ITEM TEST_SRCS ${RM_SRCS})
@@ -69,7 +69,8 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_GENERATED_DIR} ${PROTOS})
 grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_GENERATED_DIR} ${PROTOS})
 
 # include directories and link libraries
-include_directories(. third_party/include third_party/include/sodium ${PROTO_GENERATED_DIR})
+include_directories(. ${PROTO_GENERATED_DIR} third_party/include
+        third_party/include/libsodium/include third_party/include/libsodium/include/sodium)
 link_directories(third_party/lib)
 
 set(ABSL_LIB absl_int128 absl_strings absl_symbolize absl_stacktrace absl_throw_delegate)
@@ -77,7 +78,7 @@ set(ABSL_LIB absl_int128 absl_strings absl_symbolize absl_stacktrace absl_throw_
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${PROTO_SRCS}) #${GRPC_SRCS}
 #target_sources(${PROJECT_NAME}_lib PRIVATE ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${ABSL_LIB} # protobuf::libprotobuf protobuf::libprotobuf-lite
-        tommath fmt ssl crypto blake3 sodium curve25519)
+        tommath fmt ssl crypto blake3 curve25519 sodium)
 set(EXE_TARGETS)
 
 # Building tests
