@@ -69,7 +69,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_GENERATED_DIR} ${PROTOS})
 grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_GENERATED_DIR} ${PROTOS})
 
 # include directories and link libraries
-include_directories(. ${PROTO_GENERATED_DIR} third_party/include
+include_directories(. include ${PROTO_GENERATED_DIR} third_party/include
         third_party/include/libsodium/include third_party/include/libsodium/include/sodium)
 link_directories(third_party/lib)
 

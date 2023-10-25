@@ -3,6 +3,7 @@
 CD=$(cd "$(dirname "$0")" || exit && pwd)
 cd "$CD" || exit
 [ -d src ] || mkdir src
+rm -rf include/* lib/* && mkdir include lib
 
 # build absl
 sh "$CD"/build_absl.sh
@@ -33,6 +34,9 @@ sh "$CD"/build_curve25519.sh
 
 # build mcl
 sh "$CD"/build_mcl.sh
+
+# build leveldb
+sh "$CD"/build_leveldb.sh
 
 # build brpc
 #sh "$CD"/build_brpc.sh
