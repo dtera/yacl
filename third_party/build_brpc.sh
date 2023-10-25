@@ -11,7 +11,7 @@ pkg=brpc-"$brpc_ver"
 rm -rf "$pkg" && tar xvf src/"$pkg".tar.gz && cd "$pkg" || exit
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
-  brew install openssl git gnu-getopt coreutils gflags protobuf leveldb gperftools
+  brew install openssl git gnu-getopt coreutils gflags protobuf gperftools
   echo $PATH|grep -q "gnu-getopt" || export PATH="/opt/homebrew/opt/gnu-getopt/bin:$PATH"
 elif [[ "$OSTYPE" == "linux"* ]]; then
   os_release=$(awk -F= '/^ID=/{print $2}' /etc/os-release)
@@ -30,7 +30,7 @@ fi
 #sh config_brpc.sh --headers="$CD"/include --libs="$CD"/lib --cc=clang --cxx=clang++
 #make
 mkdir build && cd build || exit
-cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_INSTALL_PREFIX="$CD/" ..
+cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX="$CD/" ..
 make -j8
 
 cd "$CD" || exit

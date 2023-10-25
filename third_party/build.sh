@@ -31,6 +31,9 @@ sh "$CD"/build_libsodium_cmake.sh
 # build curve25519
 sh "$CD"/build_curve25519.sh
 
+# build mcl
+sh "$CD"/build_mcl.sh
+
 # build brpc
 #sh "$CD"/build_brpc.sh
 
