@@ -2,7 +2,9 @@
 
 CD=$(cd "$(dirname "$0")" || exit && pwd)
 cd "$CD" || exit
-. "$CD"/versions.sh
+WD=$CD
+. ./versions.sh
+SSL_PREFIX=$([[ "$1" == "" ]] && echo "$CD" || echo "$1")
 
 # build openssl
 # [ -d OpenSSL_"$openssl_ver" ] || git clone https://github.com/openssl/openssl.git
@@ -15,13 +17,13 @@ arch_name=$(arch)
 if [[ "$OSTYPE" == "darwin"* ]]; then
   if [[ "$arch_name" == "aarch64"* ]] || [[ "$arch_name" == "arm64"* ]]; then
     # ARM64
-    ./Configure enable-rc5 zlib darwin64-arm64-cc no-asm --prefix="$CD/"
+    ./Configure enable-rc5 zlib darwin64-arm64-cc no-asm --prefix="$SSL_PREFIX"
   elif [[ "$arch_name" == *"86"* ]] || [[ "$arch_name" == "amd"* ]] || [[ "$arch_name" == *"64"* ]]; then
     # AMD64
-    ./Configure enable-rc5 zlib darwin64-x86_64-cc no-asm --prefix="$CD/"
+    ./Configure enable-rc5 zlib darwin64-x86_64-cc no-asm --prefix="$SSL_PREFIX"
   fi
 elif [[ "$OSTYPE" == "linux"* ]]; then
-  ./config --prefix="$CD/"
+  ./config --prefix="$SSL_PREFIX"
 else
   echo "not supported os type: ${OSTYPE}"
   exit 1
@@ -29,7 +31,12 @@ fi
 
 make -j8
 make install_sw
-make install_ssldirs
+#make install_ssldirs
+if [[ "$SSL_PREFIX" != "$WD" ]]; then
+  [ -d "../include/openssl" ] || mv "$SSL_PREFIX/include/openssl" "$WD/include/"
+  mv "$SSL_PREFIX/lib/libssl."* "$WD/lib/"
+  mv "$SSL_PREFIX/lib/libcrypto."* "$WD/lib/"
+fi
 
-cd "$CD" || exit
+cd "$WD" || exit
 rm -rf "$pkg"

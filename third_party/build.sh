@@ -3,6 +3,8 @@
 CD=$(cd "$(dirname "$0")" || exit && pwd)
 cd "$CD" || exit
 [ -d src ] || mkdir src
+SSL_PREFIX=$([[ "$1" == "" ]] && echo "$CD" || echo "$1")
+
 rm -rf include/* lib/* && mkdir include lib
 
 # build absl
@@ -21,7 +23,7 @@ sh "$CD"/build_tommath.sh
 sh "$CD"/build_spdlog.sh
 
 # build openssl
-sh "$CD"/build_openssl.sh
+sh "$CD"/build_openssl.sh "$SSL_PREFIX"
 
 # build blake3
 sh "$CD"/build_blake3.sh
