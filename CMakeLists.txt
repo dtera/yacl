@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 option(GE_M1_CHIP "WHETHER M1 CHIP" ON)
 set(EXTRA_LIB)
+add_definitions(-DMSGPACK_NO_BOOST)
 
 # brew install grpc
 if (APPLE)
