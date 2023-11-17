@@ -53,9 +53,9 @@ file(GLOB_RECURSE SOURCES yacl/*.cc)
 file(GLOB_RECURSE TEST_SRCS yacl/*test*.cc)
 file(GLOB_RECURSE BENCH_SRCS yacl/*bench*.cc)
 file(GLOB_RECURSE RM_SRCS yacl/base/dynamic_bitset_test.cc yacl/link/*
-        yacl/crypto/base/drbg/intel_entropy_source.* yacl/crypto/primitives/ot/* yacl/crypto/primitives/dpf/*.cc
-        yacl/crypto/base/test/alg_data_test.cc yacl/io/kv/leveldb_kvstore.cc yacl/io/kv/kvstore_test.cc
-        yacl/utils/serialize.*)
+        yacl/crypto/base/drbg/intel_entropy_source.* yacl/crypto/primitives/ot/* yacl/crypto/primitives/vole/*
+        yacl/crypto/primitives/dpf/*.cc yacl/crypto/base/test/alg_data_test.cc yacl/io/kv/leveldb_kvstore.cc
+        yacl/io/kv/kvstore_test.cc yacl/utils/serialize.*)
 list(REMOVE_ITEM SOURCES ${TEST_SRCS} ${BENCH_SRCS} ${RM_SRCS})
 list(REMOVE_ITEM TEST_SRCS ${RM_SRCS})
 list(REMOVE_ITEM BENCH_SRCS ${RM_SRCS})
@@ -94,12 +94,14 @@ add_library(GTest::GTest INTERFACE IMPORTED)
 target_link_libraries(GTest::GTest INTERFACE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
 
 # Building bench
-foreach (bench_file ${BENCH_SRCS})
-    string(REPLACE ".cc" "" bench_name ${bench_file})
-    string(REGEX REPLACE "(.*)?/" "" bench_name ${bench_name})
-    add_executable(${PROJECT_NAME}_${bench_name} ${bench_file})
-    target_link_libraries(${PROJECT_NAME}_${bench_name} ${PROJECT_NAME} ${EXTRA_LIB} GTest::GTest)
-    list(APPEND EXE_TARGETS ${PROJECT_NAME}_${bench_name})
+foreach (path ${BENCH_SRCS})
+    string(REPLACE ".cc" "" name ${path})
+    string(REGEX REPLACE "(.*)?/" "" name ${name})
+    string(REGEX REPLACE "/[^/]+\.cc" "" dir ${path})
+    string(REGEX REPLACE "(.*)?/" "" dir ${dir})
+    add_executable(${dir}_${name} ${path})
+    target_link_libraries(${dir}_${name} ${PROJECT_NAME} ${EXTRA_LIB} GTest::GTest)
+    list(APPEND EXE_TARGETS ${dir}_${name})
 endforeach ()
 
 enable_testing()
