@@ -13,7 +13,8 @@ rm -rf "$pkg" && tar xvf src/"$pkg".tar.gz && cd "$pkg" || exit
 if [[ "$OSTYPE" == "darwin"* ]]; then
   brew install openssl git gnu-getopt coreutils gflags protobuf gperftools
   echo $PATH|grep -q "gnu-getopt" || export PATH="/opt/homebrew/opt/gnu-getopt/bin:$PATH"
-elif [[ "$OSTYPE" == "linux"* ]]; then
+#elif [[ "$OSTYPE" == "linux"* ]]; then   # not work for posix shell
+elif echo "$OSTYPE" | grep -q "linux" || [[ "$OSTYPE" == "" ]]; then
   os_release=$(awk -F= '/^ID=/{print $2}' /etc/os-release)
   if [[ "$os_release" == "ubuntu" ]]; then
     apt-get update && apt-get install -y git g++ make cmake libssl-dev libgflags-dev libprotobuf-dev libprotoc-dev \

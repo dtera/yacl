@@ -5,7 +5,7 @@ cd "$CD" || exit
 [ -d src ] || mkdir src
 SSL_PREFIX=$([[ "$1" == "" ]] && echo "$CD" || echo "$1")
 
-rm -rf include/* lib/* && mkdir include lib
+rm -rf include lib lib64 && mkdir include lib
 
 # build absl
 sh "$CD"/build_absl.sh
@@ -47,4 +47,9 @@ sh "$CD"/build_leveldb.sh
 #sh "$CD"/build_grpc.sh $grpc_ver
 
 cd "$CD" || exit
-rm -rf bin && rm -rf share && rm -rf ssl && rm -rf lib/cmake && rm -rf lib/pkgconfig && rm -rf lib/engines-1.1
+if echo "$OSTYPE" | grep -q "linux" || [[ "$OSTYPE" == "" ]]; then
+  rm -rf lib64/cmake && rm -rf lib64/pkgconfig && rm -rf lib64/engines-1.1
+  ([ -d lib ] || mkdir lib) && mv lib64/* lib/
+fi
+rm -rf lib64 && rm -rf bin && rm -rf share && rm -rf ssl && \
+rm -rf lib/cmake && rm -rf lib/pkgconfig && rm -rf lib/engines-1.1

@@ -19,7 +19,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     # AMD64
     ./configure --prefix="$CD/"
   fi
-elif [[ "$OSTYPE" == "linux"* ]]; then
+#elif [[ "$OSTYPE" == "linux"* ]]; then   # not work for posix shell
+elif echo "$OSTYPE" | grep -q "linux" || [[ "$OSTYPE" == "" ]]; then
   ./config --prefix="$CD/"
 else
   echo "not supported os type: ${OSTYPE}"
@@ -40,7 +41,8 @@ done
 cd ../.. || exit
 # shellcheck disable=SC2044
 for path in $(find libsodium -name "*.h"); do
-  [[ "$path" == "libsodium/include"* ]] && continue
+  # [[ "$path" == "libsodium/include"* ]] && continue
+  echo "$path" | grep -q "libsodium/include" && continue
   #head_file=${path##*/}
   head_path=${path%/*}
   head_save_path="$CD"/include/$head_path

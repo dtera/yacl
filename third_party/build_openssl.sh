@@ -22,7 +22,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     # AMD64
     ./Configure enable-rc5 zlib darwin64-x86_64-cc no-asm --prefix="$SSL_PREFIX"
   fi
-elif [[ "$OSTYPE" == "linux"* ]]; then
+#elif [[ "$OSTYPE" == "linux"* ]]; then   # not work for posix shell
+elif echo "$OSTYPE" | grep -q "linux" || [[ "$OSTYPE" == "" ]]; then
   ./config --prefix="$SSL_PREFIX"
 else
   echo "not supported os type: ${OSTYPE}"
@@ -34,8 +35,9 @@ make install_sw
 #make install_ssldirs
 if [[ "$SSL_PREFIX" != "$WD" ]]; then
   [ -d "../include/openssl" ] || mv "$SSL_PREFIX/include/openssl" "$WD/include/"
-  mv "$SSL_PREFIX/lib/libssl."* "$WD/lib/"
-  mv "$SSL_PREFIX/lib/libcrypto."* "$WD/lib/"
+  flag=$(echo "$OSTYPE" | grep -q "linux" || [[ "$OSTYPE" == "" ]] && echo "64" || echo "")
+  mv "$SSL_PREFIX/lib$flag/libssl."* "$WD/lib/"
+  mv "$SSL_PREFIX/lib$flag/libcrypto."* "$WD/lib/"
 fi
 
 cd "$WD" || exit

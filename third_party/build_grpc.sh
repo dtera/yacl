@@ -10,7 +10,8 @@ cd "$CD" || exit
 if [[ "$OSTYPE" == "darwin"* ]]; then
     brew install grpc
     # exit 0
-elif [[ "$OSTYPE" == "linux"* ]]; then
+#elif [[ "$OSTYPE" == "linux"* ]]; then   # not work for posix shell
+elif echo "$OSTYPE" | grep -q "linux" || [[ "$OSTYPE" == "" ]]; then
   os_release=$(awk -F= '/^ID=/{print $2}' /etc/os-release)
   if [ "$os_release" == "manjaro" ]; then
     pacman -Sy openssl cmake autoconf libtool pkg-config clang
