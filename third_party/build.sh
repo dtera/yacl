@@ -40,6 +40,9 @@ sh "$CD"/build_mcl.sh
 # build leveldb
 sh "$CD"/build_leveldb.sh
 
+# build cpu_features
+sh "$CD"/build_cpu_features.sh
+
 # build brpc
 #sh "$CD"/build_brpc.sh
 
