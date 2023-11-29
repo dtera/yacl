@@ -79,8 +79,8 @@ set(ABSL_LIB absl_int128 absl_strings absl_symbolize absl_stacktrace absl_throw_
 # link libraries for the target
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${PROTO_SRCS}) #${GRPC_SRCS}
 #target_sources(${PROJECT_NAME}_lib PRIVATE ${SOURCES})
-target_link_libraries(${PROJECT_NAME} ${ABSL_LIB} # protobuf::libprotobuf protobuf::libprotobuf-lite
-        tommath fmt ssl crypto blake3 sodium curve25519 mcl leveldb)
+target_link_libraries(${PROJECT_NAME} ${ABSL_LIB} # protobuf::libprotobuf protobuf::libprotobuf-lite mcl
+        tommath fmt ssl crypto blake3 sodium curve25519 leveldb)
 set(EXE_TARGETS)
 
 # Building tests

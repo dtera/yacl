@@ -35,7 +35,7 @@ sh "$CD"/build_libsodium_cmake.sh
 sh "$CD"/build_curve25519.sh
 
 # build mcl
-sh "$CD"/build_mcl.sh
+#sh "$CD"/build_mcl.sh
 
 # build leveldb
 sh "$CD"/build_leveldb.sh
