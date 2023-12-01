@@ -40,9 +40,7 @@ include_directories(${SODIUM_HDR})
 
 # link libraries for the target
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-foreach (s ${SOURCES})
-    message(@@@ ${s})
-endforeach ()
+
 # install libraries
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/libsodium TYPE INCLUDE
         FILES_MATCHING PATTERN "*.h")
