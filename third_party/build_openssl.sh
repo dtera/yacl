@@ -35,7 +35,7 @@ make install_sw
 #make install_ssldirs
 if [[ "$SSL_PREFIX" != "$WD" ]]; then
   [ -d "../include/openssl" ] || mv "$SSL_PREFIX/include/openssl" "$WD/include/"
-  flag=$(echo "$OSTYPE" | grep -q "linux" || [[ "$OSTYPE" == "" ]] && echo "64" || echo "")
+  flag=$([[ -d "$SSL_PREFIX/lib64" ]] && echo "64" || echo "")
   mv "$SSL_PREFIX/lib$flag/libssl."* "$WD/lib/"
   mv "$SSL_PREFIX/lib$flag/libcrypto."* "$WD/lib/"
 fi
