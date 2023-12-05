@@ -43,6 +43,9 @@ sh "$CD"/build_leveldb.sh
 # build cpu_features
 sh "$CD"/build_cpu_features.sh
 
+# build ippcp
+#sh "$CD"/build_ippcp.sh
+
 # build brpc
 #sh "$CD"/build_brpc.sh
 

@@ -17,3 +17,4 @@ leveldb_ver=1.23
 brpc_ver=1.7.0
 grpc_ver=1.54.0
 cpu_features_ver=0.9.0
+ippcp_ver=2021.8

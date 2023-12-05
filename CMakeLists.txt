@@ -54,7 +54,7 @@ file(GLOB_RECURSE TEST_SRCS yacl/*test*.cc)
 file(GLOB_RECURSE BENCH_SRCS yacl/*bench*.cc)
 file(GLOB_RECURSE RM_SRCS yacl/base/dynamic_bitset_test.cc yacl/crypto/base/test/alg_data_test.cc
         yacl/io/kv/leveldb_kvstore.cc yacl/io/kv/kvstore_test.cc
-        yacl/crypto/base/drbg/intel_entropy_source.* yacl/crypto/base/ecc/mcl/*.cc yacl/crypto/base/field/mcl/*.cc
+        yacl/crypto/base/drbg/intel_entropy_source.cc yacl/crypto/base/ecc/mcl/*.cc yacl/crypto/base/field/mcl/*.cc
         yacl/crypto/primitives/ot/* yacl/crypto/primitives/vole/* yacl/crypto/primitives/dpf/*.cc
         yacl/link/* yacl/utils/serialize.* yacl/utils/platform_utils*)
 list(REMOVE_ITEM SOURCES ${TEST_SRCS} ${BENCH_SRCS} ${RM_SRCS})
@@ -80,7 +80,10 @@ set(ABSL_LIB absl_int128 absl_strings absl_symbolize absl_stacktrace absl_throw_
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${PROTO_SRCS}) #${GRPC_SRCS}
 #target_sources(${PROJECT_NAME}_lib PRIVATE ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${ABSL_LIB} # protobuf::libprotobuf protobuf::libprotobuf-lite mcl
-        tommath fmt ssl crypto blake3 sodium curve25519 leveldb)
+        tommath fmt ssl crypto blake3 sodium curve25519 leveldb cpu_features)
+if (NOT APPLE)
+    target_link_libraries(${PROJECT_NAME} stdc++fs)
+endif ()
 set(EXE_TARGETS)
 
 # Building tests

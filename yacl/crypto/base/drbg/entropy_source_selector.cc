@@ -17,7 +17,8 @@
 #include <memory>
 
 #ifdef __x86_64
-#include "yacl/crypto/base/drbg/intel_entropy_source.h"
+// #include "yacl/crypto/base/drbg/intel_entropy_source.h"
+#include "yacl/crypto/base/drbg/std_entropy_source.h"
 #else
 #include "yacl/crypto/base/drbg/std_entropy_source.h"
 #endif
@@ -26,7 +27,8 @@ namespace yacl::crypto {
 
 std::shared_ptr<IEntropySource> makeEntropySource() {
 #ifdef __x86_64
-  return std::make_shared<IntelEntropySource>();
+  // return std::make_shared<IntelEntropySource>();
+  return std::make_shared<StdEntropySource>();
 #else
   return std::make_shared<StdEntropySource>();
 #endif
