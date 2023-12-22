@@ -43,6 +43,9 @@ sh "$CD"/build_leveldb.sh
 # build cpu_features
 sh "$CD"/build_cpu_features.sh
 
+# build hash_drbg
+sh "$CD"/build_hash_drbg.sh
+
 # build ippcp
 #sh "$CD"/build_ippcp.sh
 
@@ -54,8 +57,8 @@ sh "$CD"/build_cpu_features.sh
 
 cd "$CD" || exit
 if echo "$OSTYPE" | grep -q "linux" || [[ "$OSTYPE" == "" ]]; then
-  rm -rf lib64/cmake && rm -rf lib64/pkgconfig && rm -rf lib64/engines-1.1
+  rm -rf lib64/{cmake,pkgconfig,engines-1.1,engines-3,ossl-modules}
   ([ -d lib ] || mkdir lib) && mv lib64/* lib/
 fi
-rm -rf lib64 && rm -rf bin && rm -rf share && rm -rf ssl && \
-rm -rf lib/cmake && rm -rf lib/pkgconfig && rm -rf lib/engines-1.1
+rm -rf lib64 && rm -rf bin && rm -rf share && rm -rf ssl
+rm -rf lib/{cmake,pkgconfig,engines-1.1,engines-3,ossl-modules}

@@ -18,7 +18,7 @@
 #include <string>
 
 #include "yacl/base/buffer.h"
-#include "yacl/crypto/utils/secparam.h"
+//#include "yacl/crypto/utils/secparam.h"
 #include "yacl/utils/spi/spi_factory.h"
 
 namespace yacl::crypto {

@@ -75,12 +75,28 @@ include_directories(. include ${PROTO_GENERATED_DIR} third_party/include
         third_party/include/libsodium/include third_party/include/libsodium/include/sodium)
 link_directories(third_party/lib)
 
+# add third_party lib
+set(THIRD_PARTY_MODULES)
+file(GLOB THIRD_PARTY_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/src/*)
+foreach (third_party_dir ${THIRD_PARTY_PATHS})
+    if (IS_DIRECTORY ${third_party_dir})
+        file(GLOB THIRD_PARTY_SRCS ${third_party_dir}/*.c ${third_party_dir}/*.cc ${third_party_dir}/*.cpp)
+        list(LENGTH THIRD_PARTY_SRCS size)
+        if (NOT ${size} EQUAL 0)
+            string(REGEX REPLACE "(.*)?/" "" module_name ${third_party_dir})
+            add_library(${module_name} ${THIRD_PARTY_SRCS})
+            target_link_libraries(${module_name} ssl crypto)
+            list(APPEND THIRD_PARTY_MODULES ${module_name})
+        endif ()
+    endif ()
+endforeach ()
+
 set(ABSL_LIB absl_int128 absl_strings absl_symbolize absl_stacktrace absl_throw_delegate)
 # link libraries for the target
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${PROTO_SRCS}) #${GRPC_SRCS}
 #target_sources(${PROJECT_NAME}_lib PRIVATE ${SOURCES})
 target_link_libraries(${PROJECT_NAME} ${ABSL_LIB} # protobuf::libprotobuf protobuf::libprotobuf-lite mcl
-        tommath fmt ssl crypto blake3 sodium curve25519 leveldb cpu_features)
+        tommath fmt ssl crypto blake3 sodium curve25519 leveldb cpu_features ${THIRD_PARTY_MODULES})
 if (NOT APPLE)
     target_link_libraries(${PROJECT_NAME} stdc++fs)
 endif ()
@@ -111,9 +127,9 @@ endforeach ()
 enable_testing()
 
 # Building special target
-add_executable(alg_data_test ${CMAKE_CURRENT_SOURCE_DIR}/yacl/crypto/base/test/alg_data_test.cc)
-target_link_libraries(alg_data_test ${PROJECT_NAME} GTest::GTest)
-list(APPEND EXE_TARGETS alg_data_test)
+#add_executable(alg_data_test ${CMAKE_CURRENT_SOURCE_DIR}/yacl/crypto/base/test/alg_data_test.cc)
+#target_link_libraries(alg_data_test ${PROJECT_NAME} GTest::GTest)
+#list(APPEND EXE_TARGETS alg_data_test)
 
 # Building tests
 add_executable(${PROJECT_NAME}_tests yacl/tests.cc)

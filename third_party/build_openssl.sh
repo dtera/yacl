@@ -8,8 +8,10 @@ SSL_PREFIX=$([[ "$1" == "" ]] && echo "$CD" || echo "$1")
 
 # build openssl
 # [ -d OpenSSL_"$openssl_ver" ] || git clone https://github.com/openssl/openssl.git
-pkg=OpenSSL_"$openssl_ver"
-dir=openssl-OpenSSL_"$openssl_ver"
+#pkg=OpenSSL_"$openssl_ver"
+#dir=openssl-OpenSSL_"$openssl_ver"
+pkg=openssl-"$openssl_ver"
+dir=openssl-openssl-"$openssl_ver"
 [ -f src/"$pkg".tar.gz ] || curl https://github.com/openssl/openssl/archive/refs/tags/"$pkg".tar.gz -L -o src/"$pkg".tar.gz
 rm -rf "$pkg" && tar xvf src/"$pkg".tar.gz && mv "$dir" "$pkg" && cd "$pkg" || exit 0
 
@@ -38,6 +40,7 @@ if [[ "$SSL_PREFIX" != "$WD" ]]; then
   flag=$([[ -d "$SSL_PREFIX/lib64" ]] && echo "64" || echo "")
   mv "$SSL_PREFIX/lib$flag/libssl."* "$WD/lib/"
   mv "$SSL_PREFIX/lib$flag/libcrypto."* "$WD/lib/"
+  rm -rf "$SSL_PREFIX"/lib"$flag"/{cmake,pkgconfig,engines-1.1,engines-3,ossl-modules}
 fi
 
 cd "$WD" || exit
