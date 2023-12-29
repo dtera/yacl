@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 option(GE_M1_CHIP "WHETHER M1 CHIP" ON)
 set(EXTRA_LIB)
 add_definitions(-DMSGPACK_NO_BOOST)
+add_definitions(-DFMT_HEADER_ONLY)
 
 # brew install grpc
 if (APPLE)
@@ -53,10 +54,10 @@ file(GLOB_RECURSE SOURCES yacl/*.cc)
 file(GLOB_RECURSE TEST_SRCS yacl/*test*.cc)
 file(GLOB_RECURSE BENCH_SRCS yacl/*bench*.cc)
 file(GLOB_RECURSE RM_SRCS yacl/base/dynamic_bitset_test.cc yacl/crypto/base/test/alg_data_test.cc
-        yacl/io/kv/leveldb_kvstore.cc yacl/io/kv/kvstore_test.cc
-        yacl/crypto/base/drbg/intel_entropy_source.cc yacl/crypto/base/ecc/mcl/*.cc yacl/crypto/base/field/mcl/*.cc
-        yacl/crypto/primitives/ot/* yacl/crypto/primitives/vole/* yacl/crypto/primitives/dpf/*.cc
-        yacl/link/* yacl/utils/serialize.* yacl/utils/platform_utils*)
+        yacl/io/kv/leveldb_kvstore.cc yacl/io/kv/kvstore_test.cc yacl/crypto/base/drbg/intel_entropy_source.cc
+        yacl/crypto/base/ecc/mcl/*.cc yacl/crypto/base/field/mcl/*.cc yacl/crypto/base/pairing/mcl/*.cc
+        yacl/crypto/primitives/ot/*.cc yacl/crypto/primitives/vole/*.cc yacl/crypto/primitives/dpf/*.cc
+        yacl/math/galois_field/mcl_field/*.cc yacl/link/* yacl/utils/serialize.* yacl/utils/platform_utils*)
 list(REMOVE_ITEM SOURCES ${TEST_SRCS} ${BENCH_SRCS} ${RM_SRCS})
 list(REMOVE_ITEM TEST_SRCS ${RM_SRCS})
 list(REMOVE_ITEM BENCH_SRCS ${RM_SRCS})
