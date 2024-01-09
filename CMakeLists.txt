@@ -57,6 +57,7 @@ file(GLOB_RECURSE RM_SRCS yacl/base/dynamic_bitset_test.cc yacl/crypto/base/test
         yacl/io/kv/leveldb_kvstore.cc yacl/io/kv/kvstore_test.cc yacl/crypto/base/drbg/intel_entropy_source.cc
         yacl/crypto/base/ecc/mcl/*.cc yacl/crypto/base/field/mcl/*.cc yacl/crypto/base/pairing/mcl/*.cc
         yacl/crypto/primitives/ot/*.cc yacl/crypto/primitives/vole/*.cc yacl/crypto/primitives/dpf/*.cc
+        yacl/crypto/primitives/code/*.cc
         yacl/math/galois_field/mcl_field/*.cc yacl/link/* yacl/utils/serialize.* yacl/utils/platform_utils*)
 list(REMOVE_ITEM SOURCES ${TEST_SRCS} ${BENCH_SRCS} ${RM_SRCS})
 list(REMOVE_ITEM TEST_SRCS ${RM_SRCS})
