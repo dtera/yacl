@@ -17,6 +17,18 @@
 version: 2.1
 
 parameters:
+  GHA_Event:
+    type: string
+    default: ""
+  GHA_Actor:
+    type: string
+    default: ""
+  GHA_Action:
+    type: string
+    default: ""
+  GHA_Meta:
+    type: string
+    default: ""
   build-and-run:
     type: boolean
     default: false
@@ -37,6 +49,14 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
+      - run:
+          name: Checkout devtools
+          command: git clone https://github.com/secretflow/devtools.git ../devtools
+      - run:
+          name: Setup GCS
+          command: |
+            echo ${gcs_content} > ../gcs.data
+            ../devtools/bazel_cache_setup.py --in_file=../gcs.data --out_file=../gcs.json --min_download
       - run:
           name: "build and test"
           command: |
@@ -67,10 +87,17 @@ jobs:
       - run:
           name: "Install homebrew dependencies"
           command: |
-            brew install bazel cmake ninja libomp wget md5sha1sum
-            (cd /opt/homebrew/Cellar/bazel/*.*.*/libexec/bin && curl -fLO https://github.com/bazelbuild/bazel/releases/download/6.2.1/bazel-6.2.1-darwin-arm64 && chmod +x bazel-6.2.1-darwin-arm64)
+            brew install bazelisk cmake ninja libomp wget md5sha1sum
       - run:
-          name: "test"
+          name: Checkout devtools
+          command: git clone https://github.com/secretflow/devtools.git ../devtools
+      - run:
+          name: Setup GCS
+          command: |
+            echo ${gcs_content} > ../gcs.data
+            ../devtools/bazel_cache_setup.py --in_file=../gcs.data --out_file=../gcs.json --min_download
+      - run:
+          name: "build and test"
           command: |
             set +e
             declare -i test_status
