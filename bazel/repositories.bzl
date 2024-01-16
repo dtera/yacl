@@ -15,12 +15,6 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 
-IC_COMMIT_ID = "e9a64bfe1ae57f358b41790a1bdd82c390dd50da"
-IC_SHA256 = "1b8be4bd3f95d180c177b24a6ab3f8477a0e6e917058f8fb1d0013a17d7f5aba"
-
-SIMPLEST_OT_COMMIT_ID = "4e39b7c35721c7fd968da6e047f59c0ac92e8088"
-SIMPLEST_OT_SHA256 = "326e411c63b1cbd6697e9561a74f9d417df9394a988bf5c5e14775f14c612063"
-
 def yacl_deps():
     _rule_proto()
     _rule_python()
@@ -55,10 +49,10 @@ def _simplest_ot():
         http_archive,
         name = "simplest_ot",
         urls = [
-            "https://github.com/secretflow/simplest-ot/archive/{commit}.tar.gz".format(commit = SIMPLEST_OT_COMMIT_ID),
+            "https://github.com/secretflow/simplest-ot/archive/4e39b7c35721c7fd968da6e047f59c0ac92e8088.tar.gz",
         ],
-        strip_prefix = "simplest-ot-{commit}".format(commit = SIMPLEST_OT_COMMIT_ID),
-        sha256 = SIMPLEST_OT_SHA256,
+        strip_prefix = "simplest-ot-4e39b7c35721c7fd968da6e047f59c0ac92e8088",
+        sha256 = "326e411c63b1cbd6697e9561a74f9d417df9394a988bf5c5e14775f14c612063",
     )
 
 def _org_interconnection():
@@ -66,10 +60,10 @@ def _org_interconnection():
         http_archive,
         name = "org_interconnection",
         urls = [
-            "https://github.com/secretflow/interconnection/archive/{commit}.tar.gz".format(commit = IC_COMMIT_ID),
+            "https://github.com/secretflow/interconnection/archive/3afbd63192023028e5c5a440abf6882c65fc0fca.tar.gz",
         ],
-        strip_prefix = "interconnection-{commit}".format(commit = IC_COMMIT_ID),
-        sha256 = IC_SHA256,
+        strip_prefix = "interconnection-3afbd63192023028e5c5a440abf6882c65fc0fca",
+        sha256 = "a34e703e9990afb4d1546e65b9fb732d4558b0d0bb5e2efa3dc345ca16259ad0",
     )
 
     # Add homebrew openmp for macOS, somehow..homebrew installs to different location on Apple Silcon/Intel macs.. so we need two rules here
@@ -185,11 +179,11 @@ def _com_github_fmtlib_fmt():
     maybe(
         http_archive,
         name = "com_github_fmtlib_fmt",
-        strip_prefix = "fmt-10.1.1",
-        sha256 = "78b8c0a72b1c35e4443a7e308df52498252d1cefc2b08c9a97bc9ee6cfe61f8b",
+        strip_prefix = "fmt-10.2.1",
+        sha256 = "1250e4cc58bf06ee631567523f48848dc4596133e163f02615c97f78bab6c811",
         build_file = "@yacl//bazel:fmtlib.BUILD",
         urls = [
-            "https://github.com/fmtlib/fmt/archive/refs/tags/10.1.1.tar.gz",
+            "https://github.com/fmtlib/fmt/archive/refs/tags/10.2.1.tar.gz",
         ],
     )
 
@@ -197,12 +191,12 @@ def _com_github_gabime_spdlog():
     maybe(
         http_archive,
         name = "com_github_gabime_spdlog",
-        strip_prefix = "spdlog-1.12.0",
+        strip_prefix = "spdlog-1.13.0",
         type = "tar.gz",
-        sha256 = "4dccf2d10f410c1e2feaff89966bfc49a1abb29ef6f08246335b110e001e09a9",
+        sha256 = "534f2ee1a4dcbeb22249856edfb2be76a1cf4f708a20b0ac2ed090ee24cfdbc9",
         build_file = "@yacl//bazel:spdlog.BUILD",
         urls = [
-            "https://github.com/gabime/spdlog/archive/refs/tags/v1.12.0.tar.gz",
+            "https://github.com/gabime/spdlog/archive/refs/tags/v1.13.0.tar.gz",
         ],
     )
 
@@ -210,11 +204,11 @@ def _com_google_googletest():
     maybe(
         http_archive,
         name = "com_google_googletest",
-        sha256 = "ad7fdba11ea011c1d925b3289cf4af2c66a352e18d4c7264392fead75e919363",
+        sha256 = "8ad598c73ad796e0d8280b082cebd82a630d73e73cd3c70057938a6501bba5d7",
         type = "tar.gz",
-        strip_prefix = "googletest-1.13.0",
+        strip_prefix = "googletest-1.14.0",
         urls = [
-            "https://github.com/google/googletest/archive/refs/tags/v1.13.0.tar.gz",
+            "https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz",
         ],
     )
 
@@ -223,10 +217,10 @@ def _com_github_google_benchmark():
         http_archive,
         name = "com_github_google_benchmark",
         type = "tar.gz",
-        strip_prefix = "benchmark-1.8.2",
-        sha256 = "2aab2980d0376137f969d92848fbb68216abb07633034534fc8c65cc4e7a0e93",
+        strip_prefix = "benchmark-1.8.3",
+        sha256 = "6bc180a57d23d4d9515519f92b0c83d61b05b5bab188961f36ac7b06b0d9e9ce",
         urls = [
-            "https://github.com/google/benchmark/archive/refs/tags/v1.8.2.tar.gz",
+            "https://github.com/google/benchmark/archive/refs/tags/v1.8.3.tar.gz",
         ],
     )
 
@@ -234,11 +228,11 @@ def _com_github_blake3team_blake3():
     maybe(
         http_archive,
         name = "com_github_blake3team_blake3",
-        strip_prefix = "BLAKE3-1.4.1",
-        sha256 = "33020ac83a8169b2e847cc6fb1dd38806ffab6efe79fe6c320e322154a3bea2c",
+        strip_prefix = "BLAKE3-1.5.0",
+        sha256 = "f506140bc3af41d3432a4ce18b3b83b08eaa240e94ef161eb72b2e57cdc94c69",
         build_file = "@yacl//bazel:blake3.BUILD",
         urls = [
-            "https://github.com/BLAKE3-team/BLAKE3/archive/refs/tags/1.4.1.tar.gz",
+            "https://github.com/BLAKE3-team/BLAKE3/archive/refs/tags/1.5.0.tar.gz",
         ],
     )
 
@@ -306,11 +300,11 @@ def _com_github_dltcollab_sse2neon():
     maybe(
         http_archive,
         name = "com_github_dltcollab_sse2neon",
-        sha256 = "66e3d92571bfc9ce05dc1737421ba2f68e1fcb4552def866055676619955bdaa",
-        strip_prefix = "sse2neon-fb160a53e5a4ba5bc21e1a7cb80d0bd390812442",
+        sha256 = "5491c5038a301a6b0ba0531e516568bb50d165d206360f03d8d56558a2490669",
+        strip_prefix = "sse2neon-cfaa59fc04fecb117c0a0f3fe9c82dece6f359ad",
         type = "tar.gz",
         urls = [
-            "https://github.com/DLTcollab/sse2neon/archive/fb160a53e5a4ba5bc21e1a7cb80d0bd390812442.tar.gz",
+            "https://github.com/DLTcollab/sse2neon/archive/cfaa59fc04fecb117c0a0f3fe9c82dece6f359ad.tar.gz",
         ],
         build_file = "@yacl//bazel:sse2neon.BUILD",
     )
@@ -319,15 +313,15 @@ def _com_github_libtom_libtommath():
     maybe(
         http_archive,
         name = "com_github_libtom_libtommath",
-        sha256 = "dbfdafbaeb51ff92fdd3f2505ec0490f8a9badc2a71b378219856b68d470f0aa",
+        sha256 = "e3db842cf3a1feee34dfc2ee0da0657fe0c10fa64a4c7ad6dd13837261c909c7",
         type = "tar.gz",
-        strip_prefix = "libtommath-8ce69f7b5e2f34620633f4fb5c231045a8dc2f54",
+        strip_prefix = "libtommath-8314bde5e5c8e5d9331460130a9d1066e324f091",
         patch_args = ["-p1"],
         patches = [
             "@yacl//bazel:patches/libtommath.patch",
         ],
         urls = [
-            "https://github.com/libtom/libtommath/archive/8ce69f7b5e2f34620633f4fb5c231045a8dc2f54.tar.gz",
+            "https://github.com/libtom/libtommath/archive/8314bde5e5c8e5d9331460130a9d1066e324f091.tar.gz",
         ],
         build_file = "@yacl//bazel:libtommath.BUILD",
     )
@@ -362,13 +356,13 @@ def _com_github_herumi_mcl():
     maybe(
         http_archive,
         name = "com_github_herumi_mcl",
-        strip_prefix = "mcl-1.84.0",
-        sha256 = "dc655c2eb5b2426736d8ab92ed501de0ac78472f1ee7083919a98a8aca3e76a3",
+        strip_prefix = "mcl-1.86.0",
+        sha256 = "a3ab1cd01a6419f46210fd5874e795e37a4565fa305e0302301b31ffed208872",
         type = "tar.gz",
         build_file = "@yacl//bazel:mcl.BUILD",
         patch_args = ["-p1"],
         patches = [
             "@yacl//bazel:patches/mcl.patch",
         ],
-        urls = ["https://github.com/herumi/mcl/archive/refs/tags/v1.84.0.tar.gz"],
+        urls = ["https://github.com/herumi/mcl/archive/refs/tags/v1.86.0.tar.gz"],
     )
