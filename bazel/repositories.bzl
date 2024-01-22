@@ -60,10 +60,10 @@ def _org_interconnection():
         http_archive,
         name = "org_interconnection",
         urls = [
-            "https://github.com/secretflow/interconnection/archive/3afbd63192023028e5c5a440abf6882c65fc0fca.tar.gz",
+            "https://github.com/secretflow/interconnection/archive/0dbbc9154db1f00c3b1fd0c747957f35249ab8db.tar.gz",
         ],
-        strip_prefix = "interconnection-3afbd63192023028e5c5a440abf6882c65fc0fca",
-        sha256 = "a34e703e9990afb4d1546e65b9fb732d4558b0d0bb5e2efa3dc345ca16259ad0",
+        strip_prefix = "interconnection-0dbbc9154db1f00c3b1fd0c747957f35249ab8db",
+        sha256 = "72c89daeaa8827a988fec924bafd0058403099c4c5f5058b8041248079f0f51b",
     )
 
     # Add homebrew openmp for macOS, somehow..homebrew installs to different location on Apple Silcon/Intel macs.. so we need two rules here
@@ -263,10 +263,10 @@ def _rules_foreign_cc():
     maybe(
         http_archive,
         name = "rules_foreign_cc",
-        sha256 = "476303bd0f1b04cc311fc258f1708a5f6ef82d3091e53fd1977fa20383425a6a",
-        strip_prefix = "rules_foreign_cc-0.10.1",
+        sha256 = "2463288e7b2256a1dc61d62c0f970dcbe5dfc22e90c58e60d3119ce2e47209af",
+        strip_prefix = "rules_foreign_cc-c2e097455d2bbf92b2ae71611d1261ba79eb8aa8",
         urls = [
-            "https://github.com/bazelbuild/rules_foreign_cc/archive/refs/tags/0.10.1.tar.gz",
+            "https://github.com/bazelbuild/rules_foreign_cc/archive/c2e097455d2bbf92b2ae71611d1261ba79eb8aa8.tar.gz",
         ],
     )
 
