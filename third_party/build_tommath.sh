@@ -8,7 +8,9 @@ cd "$CD" || exit
 # [ -d libtommath ] || git clone https://github.com/libtom/libtommath.git
 pkg="libtommath-$libtommath_ver"
 download_url=https://github.com/libtom/libtommath/archive/"$libtommath_ver".tar.gz
-sh "$CD"/build_template.sh --pkg "$pkg" -u "$download_url" -o "-DCMAKE_POSITION_INDEPENDENT_CODE=TRUE" -d false
+sh "$CD"/build_template.sh --pkg "$pkg" -u "$download_url" -o \
+"-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_POSITION_INDEPENDENT_CODE=TRUE -DCMAKE_INSTALL_PREFIX=$CD" \
+-d false
 
 cp "$pkg"/tommath*.h include/libtommath/
 rm -rf "$pkg"

@@ -8,7 +8,7 @@ pkg=""
 download_url=""
 targets=""
 build_dir="build"
-cmake_opts="-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX=$CD"
+cmake_opts="-DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX=$CD"
 is_delete_pkg=true
 out_only_hdr=false
 
@@ -35,7 +35,13 @@ do
     -p|--pkg) pkg="$2"; shift 2;;
     -u|--download_url) download_url="$2"; shift 2;;
     -b|--build_dir) build_dir="$2"; shift 2;;
-    -o|--cmake_opts) cmake_opts="$2 $cmake_opts"; shift 2;;
+    -o|--cmake_opts)
+       if echo "$2" | grep -q "CMAKE_BUILD_TYPE"; then
+         cmake_opts="$2"
+       else
+         cmake_opts="$cmake_opts $2"
+       fi
+       shift 2;;
     -t|--targets) targets="$2"; shift 2;;
     -d|--is_delete_pkg)
        if [[ "$2" == "false" || $2 == 0 ]]; then
