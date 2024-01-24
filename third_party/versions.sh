@@ -19,3 +19,6 @@ grpc_ver=1.54.0
 cpu_features_ver=0.9.0
 ippcp_ver=2021.8
 hash_drbg_ver=2411fa9d0de81c69dce2a48555c30298253db15d
+benchmark_ver=1.8.3
+gflags_ver=2.2.2
+protobuf_ver=4.25.2

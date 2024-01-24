@@ -7,7 +7,5 @@ cd "$CD" || exit
 # build msgpack
 # [ -d msgpack-c ] || git clone https://github.com/msgpack/msgpack-c.git
 pkg=msgpack-c-cpp-"$msgpack_ver"
-[ -f src/"$pkg".tar.gz ] || curl https://github.com/msgpack/msgpack-c/archive/refs/tags/cpp-"$msgpack_ver".tar.gz -L -o src/"$pkg".tar.gz
-rm -rf "$pkg" && tar xvf src/"$pkg".tar.gz && cp -R "$pkg"/include/* ./include/
-cd "$CD" || exit
-rm -rf "$pkg"
+download_url=https://github.com/msgpack/msgpack-c/archive/refs/tags/cpp-"$msgpack_ver".tar.gz
+sh "$CD"/build_template.sh --pkg "$pkg" -u "$download_url" --out_only_hdr true

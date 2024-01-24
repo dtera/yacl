@@ -11,7 +11,7 @@ pkg=brpc-"$brpc_ver"
 rm -rf "$pkg" && tar xvf src/"$pkg".tar.gz && cd "$pkg" || exit
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
-  brew install openssl git gnu-getopt coreutils gflags protobuf gperftools
+  # brew install openssl git gnu-getopt coreutils gflags protobuf gperftools
   echo $PATH|grep -q "gnu-getopt" || export PATH="/opt/homebrew/opt/gnu-getopt/bin:$PATH"
 #elif [[ "$OSTYPE" == "linux"* ]]; then   # not work for posix shell
 elif echo "$OSTYPE" | grep -q "linux" || [[ "$OSTYPE" == "" ]]; then
@@ -30,9 +30,10 @@ fi
 
 #sh config_brpc.sh --headers="$CD"/include --libs="$CD"/lib --cc=clang --cxx=clang++
 #make
+patch src/bvar/default_variables.cpp ../bazel/patches/brpc_m1.patch
 mkdir build && cd build || exit
 cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DCMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX="$CD/" ..
-make -j8
+make -j8 && make install
 
 cd "$CD" || exit
 rm -rf "$pkg"

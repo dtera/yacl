@@ -5,26 +5,15 @@ project(yacl VERSION 1.0 LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 option(GE_M1_CHIP "WHETHER M1 CHIP" ON)
-set(EXTRA_LIB)
 add_definitions(-DMSGPACK_NO_BOOST)
 add_definitions(-DFMT_HEADER_ONLY)
-
 # brew install grpc
+set(GRPC_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/)  # /opt/homebrew/opt/grpc /usr/local/grpc
 if (APPLE)
-    if (GE_M1_CHIP)
-        set(OPT_PATH /opt/homebrew/opt)
-    else ()
-        set(OPT_PATH /usr/local/opt)
-    endif ()
-    set(GRPC_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/grpc)  # ${OPT_PATH}/grpc
-    find_package(benchmark REQUIRED)
-    find_package(gflags REQUIRED)
     execute_process(COMMAND brew --prefix libomp OUTPUT_VARIABLE BREW_libomp_PREFIX OUTPUT_STRIP_TRAILING_WHITESPACE)
     include_directories(${BREW_libomp_PREFIX}/include)
     link_libraries(${BREW_libomp_PREFIX}/lib/libomp.dylib)
-    list(APPEND EXTRA_LIB benchmark::benchmark gflags)
 else ()
-    set(GRPC_ROOT_DIR /usr/local/grpc)
     set(CMAKE_INSTALL_RPATH "${GRPC_ROOT_DIR}/lib")
     link_directories(third_party/lib64)
 endif ()
@@ -57,25 +46,27 @@ file(GLOB_RECURSE RM_SRCS yacl/base/dynamic_bitset_test.cc yacl/crypto/base/test
         yacl/io/kv/leveldb_kvstore.cc yacl/io/kv/kvstore_test.cc yacl/crypto/base/drbg/intel_entropy_source.cc
         yacl/crypto/base/ecc/mcl/*.cc yacl/crypto/base/field/mcl/*.cc yacl/crypto/base/pairing/mcl/*.cc
         yacl/crypto/primitives/ot/*.cc yacl/crypto/primitives/vole/*.cc yacl/crypto/primitives/dpf/*.cc
-        yacl/crypto/primitives/code/*.cc
-        yacl/math/galois_field/mcl_field/*.cc yacl/link/* yacl/utils/serialize.* yacl/utils/platform_utils*)
+        yacl/crypto/primitives/code/*.cc yacl/link/*.cc yacl/math/galois_field/mcl_field/*.cc
+        yacl/utils/serialize.* yacl/utils/platform_utils*)
 list(REMOVE_ITEM SOURCES ${TEST_SRCS} ${BENCH_SRCS} ${RM_SRCS})
 list(REMOVE_ITEM TEST_SRCS ${RM_SRCS})
 list(REMOVE_ITEM BENCH_SRCS ${RM_SRCS})
 
 # config auto generated for protobuf
 file(GLOB_RECURSE PROTOS yacl/*.proto)
-file(GLOB_RECURSE RM_PROTOS yacl/crypto/primitives/dpf/*.proto yacl/link/*.proto yacl/utils/*.proto)
+file(GLOB_RECURSE RM_PROTOS yacl/crypto/primitives/dpf/*.proto yacl/link/transport/*.proto yacl/utils/*.proto)
 list(REMOVE_ITEM PROTOS ${RM_PROTOS})
 set(PROTO_GENERATED_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/proto-generated)
 file(MAKE_DIRECTORY ${PROTO_GENERATED_DIR})
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_GENERATED_DIR} ${PROTOS})
 grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_GENERATED_DIR} ${PROTOS})
 
+file(GLOB ABSL_LIBS third_party/lib/libabsl_*)
 # include directories and link libraries
 include_directories(. include ${PROTO_GENERATED_DIR} third_party/include
         third_party/include/libsodium/include third_party/include/libsodium/include/sodium)
 link_directories(third_party/lib)
+link_libraries(${ABSL_LIBS})
 
 # add third_party lib
 set(THIRD_PARTY_MODULES)
@@ -93,11 +84,9 @@ foreach (third_party_dir ${THIRD_PARTY_PATHS})
     endif ()
 endforeach ()
 
-set(ABSL_LIB absl_int128 absl_strings absl_symbolize absl_stacktrace absl_throw_delegate)
 # link libraries for the target
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${PROTO_SRCS}) #${GRPC_SRCS}
-#target_sources(${PROJECT_NAME}_lib PRIVATE ${SOURCES})
-target_link_libraries(${PROJECT_NAME} ${ABSL_LIB} # protobuf::libprotobuf protobuf::libprotobuf-lite mcl
+target_link_libraries(${PROJECT_NAME} protobuf protobuf-lite # mcl
         tommath fmt ssl crypto blake3 sodium curve25519 leveldb cpu_features ${THIRD_PARTY_MODULES})
 if (NOT APPLE)
     target_link_libraries(${PROJECT_NAME} stdc++fs)
@@ -122,7 +111,7 @@ foreach (path ${BENCH_SRCS})
     string(REGEX REPLACE "/[^/]+\.cc" "" dir ${path})
     string(REGEX REPLACE "(.*)?/" "" dir ${dir})
     add_executable(${dir}_${name} ${path})
-    target_link_libraries(${dir}_${name} ${PROJECT_NAME} ${EXTRA_LIB} GTest::GTest)
+    target_link_libraries(${dir}_${name} ${PROJECT_NAME} benchmark gflags GTest::GTest)
     list(APPEND EXE_TARGETS ${dir}_${name})
 endforeach ()
 
@@ -136,7 +125,7 @@ enable_testing()
 # Building tests
 add_executable(${PROJECT_NAME}_tests yacl/tests.cc)
 target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME}
-        ${EXTRA_LIB} GTest::GTest
+        gflags GTest::GTest
 )
 target_sources(${PROJECT_NAME}_tests PRIVATE ${TEST_SRCS})
 list(APPEND EXE_TARGETS ${PROJECT_NAME}_tests)
