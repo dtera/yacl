@@ -43,9 +43,6 @@ sh "$CD"/build_leveldb.sh &
 # build cpu_features
 sh "$CD"/build_cpu_features.sh &
 
-# build hash_drbg
-sh "$CD"/build_hash_drbg.sh &
-
 # build benchmark
 sh "$CD"/build_benchmark.sh &
 
@@ -65,6 +62,10 @@ sh "$CD"/build_protobuf.sh &
 #sh "$CD"/build_grpc.sh $grpc_ver &
 
 wait
+
+# build hash_drbg
+sh "$CD"/build_hash_drbg.sh
+
 cd "$CD" || exit
 if echo "$OSTYPE" | grep -q "linux" || [[ "$OSTYPE" == "" ]]; then
   rm -rf lib64/{cmake,pkgconfig,engines-1.1,engines-3,ossl-modules}
