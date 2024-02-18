@@ -154,11 +154,11 @@ def _com_google_absl():
     maybe(
         http_archive,
         name = "com_google_absl",
-        sha256 = "338420448b140f0dfd1a1ea3c3ce71b3bc172071f24f4d9a57d59b45037da440",
+        sha256 = "3c743204df78366ad2eaf236d6631d83f6bc928d1705dd0000b872e53b73dc6a",
         type = "tar.gz",
-        strip_prefix = "abseil-cpp-20240116.0",
+        strip_prefix = "abseil-cpp-20240116.1",
         urls = [
-            "https://github.com/abseil/abseil-cpp/archive/refs/tags/20240116.0.tar.gz",
+            "https://github.com/abseil/abseil-cpp/archive/refs/tags/20240116.1.tar.gz",
         ],
     )
 
@@ -252,10 +252,10 @@ def _rule_python():
     maybe(
         http_archive,
         name = "rules_python",
-        sha256 = "d71d2c67e0bce986e1c5a7731b4693226867c45bfe0b7c5e0067228a536fc580",
-        strip_prefix = "rules_python-0.29.0",
+        sha256 = "c68bdc4fbec25de5b5493b8819cfc877c4ea299c0dcb15c244c5a00208cde311",
+        strip_prefix = "rules_python-0.31.0",
         urls = [
-            "https://github.com/bazelbuild/rules_python/archive/refs/tags/0.29.0.tar.gz",
+            "https://github.com/bazelbuild/rules_python/archive/refs/tags/0.31.0.tar.gz",
         ],
     )
 
@@ -263,10 +263,10 @@ def _rules_foreign_cc():
     maybe(
         http_archive,
         name = "rules_foreign_cc",
-        sha256 = "2463288e7b2256a1dc61d62c0f970dcbe5dfc22e90c58e60d3119ce2e47209af",
-        strip_prefix = "rules_foreign_cc-c2e097455d2bbf92b2ae71611d1261ba79eb8aa8",
+        sha256 = "f2a43481b4d66c04064e6dfdeac14478403516b1a8fd1a226e4edcfe86dd4472",
+        strip_prefix = "rules_foreign_cc-4831827e291e3b4a1f73679a5c1197a26d0ac3ed",
         urls = [
-            "https://github.com/bazelbuild/rules_foreign_cc/archive/c2e097455d2bbf92b2ae71611d1261ba79eb8aa8.tar.gz",
+            "https://github.com/bazelbuild/rules_foreign_cc/archive/4831827e291e3b4a1f73679a5c1197a26d0ac3ed.tar.gz",
         ],
     )
 
