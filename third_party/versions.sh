@@ -3,7 +3,7 @@
 CD=$(cd "$(dirname "$0")" || exit && pwd)
 cd "$CD" || exit
 
-absl_ver=20230802.1
+absl_ver=20240116.1
 fmt_ver=10.2.1
 msgpack_ver=6.1.0
 openssl_ver=3.0.12
