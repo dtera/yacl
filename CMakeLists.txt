@@ -57,9 +57,12 @@ file(GLOB_RECURSE PROTOS yacl/*.proto)
 file(GLOB_RECURSE RM_PROTOS yacl/crypto/primitives/dpf/*.proto yacl/link/transport/*.proto yacl/utils/*.proto)
 list(REMOVE_ITEM PROTOS ${RM_PROTOS})
 set(PROTO_GENERATED_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/proto-generated)
-file(MAKE_DIRECTORY ${PROTO_GENERATED_DIR})
-protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_GENERATED_DIR} ${PROTOS})
-grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_GENERATED_DIR} ${PROTOS})
+if (APPLE)
+    file(MAKE_DIRECTORY ${PROTO_GENERATED_DIR})
+    protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_GENERATED_DIR} ${PROTOS})
+    grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_GENERATED_DIR} ${PROTOS})
+endif ()
+
 
 file(GLOB ABSL_LIBS third_party/lib/libabsl_*)
 # include directories and link libraries
@@ -86,7 +89,7 @@ endforeach ()
 
 # link libraries for the target
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${PROTO_SRCS}) #${GRPC_SRCS}
-target_link_libraries(${PROJECT_NAME} protobuf protobuf-lite # mcl
+target_link_libraries(${PROJECT_NAME} #  protobuf protobuf-lite mcl
         tommath fmt ssl crypto blake3 sodium curve25519 leveldb cpu_features ${THIRD_PARTY_MODULES})
 if (NOT APPLE)
     target_link_libraries(${PROJECT_NAME} stdc++fs)

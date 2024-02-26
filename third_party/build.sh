@@ -50,7 +50,7 @@ sh "$CD"/build_benchmark.sh &
 sh "$CD"/build_gflags.sh &
 
 # build protobuf
-sh "$CD"/build_protobuf.sh &
+[[ "$OSTYPE" == "darwin"* ]] && sh "$CD"/build_protobuf.sh &
 
 # build ippcp
 #sh "$CD"/build_ippcp.sh &
