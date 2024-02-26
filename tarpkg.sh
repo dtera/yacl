@@ -7,7 +7,7 @@ pkg=yacl
 mkdir -p tmp/$pkg
 cp -R cmake include third_party $pkg CMakeLists.txt tmp/$pkg/
 pushd tmp
-rm -rf $pkg/third_party/{include,lib,proto-generated,src/hash_drbg}
+rm -rf $pkg/third_party/{include,lib,proto-generated,bin,share,src/hash_drbg}
 if [[ "$OSTYPE" == "darwin"* ]]; then
   gtar cvf $pkg.tar.gz $pkg
 else

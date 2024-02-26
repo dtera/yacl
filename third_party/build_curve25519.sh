@@ -18,7 +18,7 @@ for path in $(find . -name "*.h"); do
   mkdir -p "$head_save_path" && cp "$path" "$head_save_path"
 done
 
-gcc curve25519.c -m64 -O3 -c && ar -r libcurve25519.a curve25519.o && cp libcurve25519.a "$CD"/lib/
+gcc curve25519.c -O3 -c && ar -r libcurve25519.a curve25519.o && cp libcurve25519.a "$CD"/lib/
 
 cd "$CD" || exit
 rm -rf "$pkg"
