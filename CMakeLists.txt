@@ -89,8 +89,11 @@ endforeach ()
 
 # link libraries for the target
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${PROTO_SRCS}) #${GRPC_SRCS}
-target_link_libraries(${PROJECT_NAME} #  protobuf protobuf-lite mcl
-        tommath fmt ssl crypto blake3 sodium curve25519 leveldb cpu_features ${THIRD_PARTY_MODULES})
+set(LIBS tommath fmt ssl crypto blake3 sodium curve25519 leveldb cpu_features) # mcl
+if (APPLE)
+    list(APPEND LIBS protobuf protobuf-lite)
+endif ()
+target_link_libraries(${PROJECT_NAME} ${LIBS} ${THIRD_PARTY_MODULES})
 if (NOT APPLE)
     target_link_libraries(${PROJECT_NAME} stdc++fs)
 endif ()
