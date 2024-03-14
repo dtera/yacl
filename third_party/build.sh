@@ -55,9 +55,6 @@ sh "$CD"/build_gflags.sh &
 # build ippcp
 #sh "$CD"/build_ippcp.sh &
 
-# build ippcp
-#sh "$CD"/build_ippcp.sh
-
 # build brpc
 #sh "$CD"/build_brpc.sh &
 
