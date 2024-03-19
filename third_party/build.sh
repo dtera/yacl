@@ -5,7 +5,7 @@ cd "$CD" || exit
 [ -d src ] || mkdir src
 SSL_PREFIX=$([[ "$1" == "" ]] && echo "$CD" || echo "$1")
 
-rm -rf include lib lib64 && mkdir include lib
+rm -rf include lib lib64 proto-generated && mkdir include lib
 
 # build absl
 sh "$CD"/build_absl.sh
@@ -50,7 +50,7 @@ sh "$CD"/build_benchmark.sh &
 sh "$CD"/build_gflags.sh &
 
 # build protobuf
-[[ "$OSTYPE" == "darwin"* ]] && sh "$CD"/build_protobuf.sh &
+[[ "$2" == "build_proto"* ]] && sh "$CD"/build_protobuf.sh &
 
 # build ippcp
 #sh "$CD"/build_ippcp.sh &

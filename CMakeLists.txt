@@ -5,6 +5,7 @@ project(yacl VERSION 1.0 LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 option(GE_M1_CHIP "WHETHER M1 CHIP" ON)
+option(BUILD_PROTOS "WHETHER M1 CHIP" OFF)
 add_definitions(-DMSGPACK_NO_BOOST)
 add_definitions(-DFMT_HEADER_ONLY)
 # brew install grpc
@@ -57,7 +58,7 @@ file(GLOB_RECURSE PROTOS yacl/*.proto)
 file(GLOB_RECURSE RM_PROTOS yacl/crypto/primitives/dpf/*.proto yacl/link/transport/*.proto yacl/utils/*.proto)
 list(REMOVE_ITEM PROTOS ${RM_PROTOS})
 set(PROTO_GENERATED_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/proto-generated)
-if (APPLE)
+if (BUILD_PROTOS)
     file(MAKE_DIRECTORY ${PROTO_GENERATED_DIR})
     protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_GENERATED_DIR} ${PROTOS})
     grpc_generate_cpp(GRPC_SRCS GRPC_HDRS ${PROTO_GENERATED_DIR} ${PROTOS})
@@ -90,7 +91,7 @@ endforeach ()
 # link libraries for the target
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${PROTO_SRCS}) #${GRPC_SRCS}
 set(LIBS tommath fmt ssl crypto blake3 sodium curve25519 leveldb cpu_features) # mcl
-if (APPLE)
+if (BUILD_PROTOS)
     list(APPEND LIBS protobuf protobuf-lite)
 endif ()
 target_link_libraries(${PROJECT_NAME} ${LIBS} ${THIRD_PARTY_MODULES})
