@@ -339,6 +339,10 @@ def _com_github_msgpack_msgpack():
         type = "tar.gz",
         strip_prefix = "msgpack-c-cpp-6.1.0",
         sha256 = "5e63e4d9b12ab528fccf197f7e6908031039b1fc89cd8da0e97fbcbf5a6c6d3a",
+        patches = [
+            "@yacl//bazel:patches/msgpack.patch",
+        ],
+        patch_args = ["-p1"],
         urls = [
             "https://github.com/msgpack/msgpack-c/archive/refs/tags/cpp-6.1.0.tar.gz",
         ],
