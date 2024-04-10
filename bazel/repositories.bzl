@@ -60,10 +60,10 @@ def _org_interconnection():
         http_archive,
         name = "org_interconnection",
         urls = [
-            "https://github.com/secretflow/interconnection/archive/32ec6f51aeb662f84c4d06fd8a0c3675a1e801a6.tar.gz",
+            "https://github.com/secretflow/interconnection/archive/30e4220b7444d0bb077a9040f1b428632124e31a.tar.gz",
         ],
-        strip_prefix = "interconnection-32ec6f51aeb662f84c4d06fd8a0c3675a1e801a6",
-        sha256 = "a6b65900c36f1f9bc9c5bfa4fbf1b66fb1045f09eca8beb3a09c4be4c80b85f3",
+        strip_prefix = "interconnection-30e4220b7444d0bb077a9040f1b428632124e31a",
+        sha256 = "341f6de0fa7dd618f9723009b9cb5b1da1788aacb9e12acfb0c9b19e5c5a7354",
     )
 
     # Add homebrew openmp for macOS, somehow..homebrew installs to different location on Apple Silcon/Intel macs.. so we need two rules here
@@ -155,16 +155,11 @@ def _com_google_absl():
     maybe(
         http_archive,
         name = "com_google_absl",
-        sha256 = "3c743204df78366ad2eaf236d6631d83f6bc928d1705dd0000b872e53b73dc6a",
+        sha256 = "733726b8c3a6d39a4120d7e45ea8b41a434cdacde401cba500f14236c49b39dc",
         type = "tar.gz",
-        strip_prefix = "abseil-cpp-20240116.1",
-        # back port https://github.com/abseil/abseil-cpp/issues/1629
-        patch_args = ["-p1"],
-        patches = [
-            "@yacl//bazel:patches/abseil_nvcc.patch",
-        ],
+        strip_prefix = "abseil-cpp-20240116.2",
         urls = [
-            "https://github.com/abseil/abseil-cpp/archive/refs/tags/20240116.1.tar.gz",
+            "https://github.com/abseil/abseil-cpp/archive/refs/tags/20240116.2.tar.gz",
         ],
     )
 
@@ -269,10 +264,10 @@ def _rules_foreign_cc():
     maybe(
         http_archive,
         name = "rules_foreign_cc",
-        sha256 = "f2a43481b4d66c04064e6dfdeac14478403516b1a8fd1a226e4edcfe86dd4472",
-        strip_prefix = "rules_foreign_cc-4831827e291e3b4a1f73679a5c1197a26d0ac3ed",
+        sha256 = "b3127e65fc189f28833be0cf64ba8b33b0bbb2707b7d448ba3baba5247a3c9f8",
+        strip_prefix = "rules_foreign_cc-5c34b7136f0dec5d8abf2b840796ec8aef56a7c1",
         urls = [
-            "https://github.com/bazelbuild/rules_foreign_cc/archive/4831827e291e3b4a1f73679a5c1197a26d0ac3ed.tar.gz",
+            "https://github.com/bazelbuild/rules_foreign_cc/archive/5c34b7136f0dec5d8abf2b840796ec8aef56a7c1.tar.gz",
         ],
     )
 
@@ -306,11 +301,11 @@ def _com_github_dltcollab_sse2neon():
     maybe(
         http_archive,
         name = "com_github_dltcollab_sse2neon",
-        sha256 = "f9c60af6f467c743f255857ebd12b09edf85360052ebb4a2c304ef84405886d7",
-        strip_prefix = "sse2neon-4a036e60472af7dd60a31421fa01557000b5c96b",
+        sha256 = "787e0a7a64f1461b48232a7f9b9e9c14fa4a35a30875f2fb91aec6ddeaddfc0f",
+        strip_prefix = "sse2neon-8df2f48dbd0674ae5087f7a6281af6f55fa5a8e2",
         type = "tar.gz",
         urls = [
-            "https://github.com/DLTcollab/sse2neon/archive/4a036e60472af7dd60a31421fa01557000b5c96b.tar.gz",
+            "https://github.com/DLTcollab/sse2neon/archive/8df2f48dbd0674ae5087f7a6281af6f55fa5a8e2.tar.gz",
         ],
         build_file = "@yacl//bazel:sse2neon.BUILD",
     )
@@ -319,15 +314,15 @@ def _com_github_libtom_libtommath():
     maybe(
         http_archive,
         name = "com_github_libtom_libtommath",
-        sha256 = "e3db842cf3a1feee34dfc2ee0da0657fe0c10fa64a4c7ad6dd13837261c909c7",
+        sha256 = "7cfbdb64431129de4257e7d3349200fdbd4f229b470ff3417b30d0f39beed41f",
         type = "tar.gz",
-        strip_prefix = "libtommath-8314bde5e5c8e5d9331460130a9d1066e324f091",
+        strip_prefix = "libtommath-42b3fb07e7d504f61a04c7fca12e996d76a25251",
         patch_args = ["-p1"],
         patches = [
             "@yacl//bazel:patches/libtommath.patch",
         ],
         urls = [
-            "https://github.com/libtom/libtommath/archive/8314bde5e5c8e5d9331460130a9d1066e324f091.tar.gz",
+            "https://github.com/libtom/libtommath/archive/42b3fb07e7d504f61a04c7fca12e996d76a25251.tar.gz",
         ],
         build_file = "@yacl//bazel:libtommath.BUILD",
     )
@@ -366,13 +361,13 @@ def _com_github_herumi_mcl():
     maybe(
         http_archive,
         name = "com_github_herumi_mcl",
-        strip_prefix = "mcl-1.87",
-        sha256 = "3c7438e240ed385182c3bdf597913dd77841598126eba1afa29dd78a339c8110",
+        strip_prefix = "mcl-1.88",
+        sha256 = "7fcc630c008e973dda88dd1d1cd2bb14face95ee3ed3b2f717fbb25d340d6ba5",
         type = "tar.gz",
         build_file = "@yacl//bazel:mcl.BUILD",
         patch_args = ["-p1"],
         patches = [
             "@yacl//bazel:patches/mcl.patch",
         ],
-        urls = ["https://github.com/herumi/mcl/archive/refs/tags/v1.87.tar.gz"],
+        urls = ["https://github.com/herumi/mcl/archive/refs/tags/v1.88.tar.gz"],
     )
