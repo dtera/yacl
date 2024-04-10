@@ -3,16 +3,16 @@
 CD=$(cd "$(dirname "$0")" || exit && pwd)
 cd "$CD" || exit
 
-absl_ver=20240116.1
+absl_ver=20240116.2
 fmt_ver=10.2.1
 msgpack_ver=6.1.0
 openssl_ver=3.0.12
 spdlog_ver=1.13.0
-libtommath_ver=8314bde5e5c8e5d9331460130a9d1066e324f091
+libtommath_ver=42b3fb07e7d504f61a04c7fca12e996d76a25251
 blake3_ver=1.5.1
 libsodium_ver=1.0.18
 curve25519_ver=2fe66b65ea1acb788024f40a3373b8b3e6f4bbb2
-mcl_ver=1.87
+mcl_ver=1.88
 leveldb_ver=1.23
 brpc_ver=1.8.0
 grpc_ver=1.54.0
