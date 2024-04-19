@@ -146,6 +146,8 @@ def _com_google_protobuf():
         sha256 = "2c6a36c7b5a55accae063667ef3c55f2642e67476d96d355ff0acb13dbb47f09",
         strip_prefix = "protobuf-21.12",
         type = "tar.gz",
+        patch_args = ["-p1"],
+        patches = ["@yacl//bazel:patches/protobuf.patch"],
         urls = [
             "https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protobuf-all-21.12.tar.gz",
         ],
@@ -280,7 +282,7 @@ def _com_github_libsodium():
         sha256 = "6f504490b342a4f8a4c4a02fc9b866cbef8622d5df4e5452b46be121e46636c1",
         build_file = "@yacl//bazel:libsodium.BUILD",
         urls = [
-            "https://download.libsodium.org/libsodium/releases/libsodium-1.0.18.tar.gz",
+            "https://github.com/jedisct1/libsodium/releases/download/1.0.18-RELEASE/libsodium-1.0.18.tar.gz",
         ],
     )
 
