@@ -22,3 +22,5 @@ hash_drbg_ver=2411fa9d0de81c69dce2a48555c30298253db15d
 benchmark_ver=1.8.3
 gflags_ver=2.2.2
 protobuf_ver=4.25.2
+fourqlib_ver=1031567f23278e1135b35cc04e5d74c2ac88c029
+lib25519_ver=20240321
