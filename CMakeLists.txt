@@ -88,7 +88,7 @@ endforeach ()
 
 # link libraries for the target
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${PROTO_SRCS}) #${GRPC_SRCS}
-set(LIBS tommath fmt ssl crypto blake3 sodium curve25519 leveldb cpu_features) # mcl
+set(LIBS tommath fmt blake3 sodium curve25519 leveldb cpu_features) # mcl ssl crypto
 if (BUILD_PROTOS)
     list(APPEND LIBS protobuf protobuf-lite)
 endif ()
