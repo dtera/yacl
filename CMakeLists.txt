@@ -45,8 +45,8 @@ file(GLOB_RECURSE TEST_SRCS yacl/*test*.cc)
 file(GLOB_RECURSE BENCH_SRCS yacl/*bench*.cc)
 file(GLOB_RECURSE RM_SRCS yacl/base/dynamic_bitset_test.cc yacl/io/kv/leveldb_kvstore.cc yacl/io/kv/kvstore_test.cc
         yacl/crypto/ecc/FourQlib/*.cc yacl/crypto/ecc/lib25519/*.cc yacl/crypto/ecc/mcl/*.cc
-        yacl/crypto/pairing/*.cc yacl/kernel/*.cc yacl/link/*.cc yacl/math/galois_field/*.cc
-        yacl/utils/serialize.* yacl/utils/platform_utils*)
+        yacl/crypto/experimental/sync_drbg/*.cc yacl/crypto/pairing/*.cc yacl/kernel/*.cc yacl/link/*.cc
+        yacl/math/galois_field/*.cc yacl/utils/serialize.* yacl/utils/platform_utils*)
 list(REMOVE_ITEM SOURCES ${TEST_SRCS} ${BENCH_SRCS} ${RM_SRCS})
 list(REMOVE_ITEM TEST_SRCS ${RM_SRCS})
 list(REMOVE_ITEM BENCH_SRCS ${RM_SRCS})
