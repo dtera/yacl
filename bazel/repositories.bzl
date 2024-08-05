@@ -51,10 +51,10 @@ def _simplest_ot():
         http_archive,
         name = "simplest_ot",
         urls = [
-            "https://github.com/secretflow/simplest-ot/archive/4e39b7c35721c7fd968da6e047f59c0ac92e8088.tar.gz",
+            "https://github.com/secretflow/simplest-ot/archive/60197bc7dad327bb55759e8e854885411e999167.tar.gz",
         ],
-        strip_prefix = "simplest-ot-4e39b7c35721c7fd968da6e047f59c0ac92e8088",
-        sha256 = "326e411c63b1cbd6697e9561a74f9d417df9394a988bf5c5e14775f14c612063",
+        strip_prefix = "simplest-ot-60197bc7dad327bb55759e8e854885411e999167",
+        sha256 = "c8816bf147e320f51c516f4c511f2d1a732ac0d0f171d29f442cbe2b5173ddba",
     )
 
 def _org_interconnection():
@@ -85,8 +85,8 @@ def _com_github_brpc_brpc():
     maybe(
         http_archive,
         name = "com_github_brpc_brpc",
-        sha256 = "85856da0216773e1296834116f69f9e80007b7ff421db3be5c9d1890ecfaea74",
-        strip_prefix = "brpc-1.9.0",
+        sha256 = "fe4eb10b4ca1a59e0f71086552b2d8897afd66df93b53c18ad83f6a93717cc2d",
+        strip_prefix = "brpc-1.10.0",
         type = "tar.gz",
         patch_args = ["-p1"],
         patches = [
@@ -94,7 +94,7 @@ def _com_github_brpc_brpc():
             "@yacl//bazel:patches/brpc_m1.patch",
         ],
         urls = [
-            "https://github.com/apache/brpc/archive/refs/tags/1.9.0.tar.gz",
+            "https://github.com/apache/brpc/archive/refs/tags/1.10.0.tar.gz",
         ],
     )
 
@@ -206,11 +206,11 @@ def _com_google_googletest():
     maybe(
         http_archive,
         name = "com_google_googletest",
-        sha256 = "8ad598c73ad796e0d8280b082cebd82a630d73e73cd3c70057938a6501bba5d7",
+        sha256 = "7b42b4d6ed48810c5362c265a17faebe90dc2373c885e5216439d37927f02926",
         type = "tar.gz",
-        strip_prefix = "googletest-1.14.0",
+        strip_prefix = "googletest-1.15.2",
         urls = [
-            "https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz",
+            "https://github.com/google/googletest/archive/refs/tags/v1.15.2.tar.gz",
         ],
     )
 
@@ -219,10 +219,10 @@ def _com_github_google_benchmark():
         http_archive,
         name = "com_github_google_benchmark",
         type = "tar.gz",
-        strip_prefix = "benchmark-1.8.4",
-        sha256 = "3e7059b6b11fb1bbe28e33e02519398ca94c1818874ebed18e504dc6f709be45",
+        strip_prefix = "benchmark-1.8.5",
+        sha256 = "d26789a2b46d8808a48a4556ee58ccc7c497fcd4c0af9b90197674a81e04798a",
         urls = [
-            "https://github.com/google/benchmark/archive/refs/tags/v1.8.4.tar.gz",
+            "https://github.com/google/benchmark/archive/refs/tags/v1.8.5.tar.gz",
         ],
     )
 
@@ -230,11 +230,11 @@ def _com_github_blake3team_blake3():
     maybe(
         http_archive,
         name = "com_github_blake3team_blake3",
-        strip_prefix = "BLAKE3-1.5.1",
-        sha256 = "822cd37f70152e5985433d2c50c8f6b2ec83aaf11aa31be9fe71486a91744f37",
+        strip_prefix = "BLAKE3-1.5.3",
+        sha256 = "ec9114480857334858e73b727199c573bfdbed6138a83be573f076d37e671fc1",
         build_file = "@yacl//bazel:blake3.BUILD",
         urls = [
-            "https://github.com/BLAKE3-team/BLAKE3/archive/refs/tags/1.5.1.tar.gz",
+            "https://github.com/BLAKE3-team/BLAKE3/archive/refs/tags/1.5.3.tar.gz",
         ],
     )
 
