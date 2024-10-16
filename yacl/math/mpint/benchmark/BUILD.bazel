@@ -40,3 +40,12 @@ yacl_cc_binary(
         "@com_github_google_benchmark//:benchmark_main",
     ],
 )
+
+yacl_cc_binary(
+    name = "mod",
+    srcs = ["mod_bench.cc"],
+    deps = [
+        "//yacl/math/mpint",
+        "@com_github_google_benchmark//:benchmark_main",
+    ],
+)

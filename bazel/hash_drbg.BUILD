@@ -24,6 +24,6 @@ cc_library(
     copts = ["-Wno-parentheses"],
     visibility = ["//visibility:public"],
     deps = [
-        "@com_github_openssl_openssl//:openssl",
+        "@yacl//yacl/crypto:openssl_wrappers",
     ],
 )

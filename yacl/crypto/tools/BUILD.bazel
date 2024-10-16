@@ -34,6 +34,7 @@ yacl_cc_library(
         "//yacl:secparam",
         "//yacl/base:dynamic_bitset",
         "//yacl/crypto/block_cipher:symmetric_crypto",
+        "//yacl/math/mpint",
     ],
 )
 
@@ -42,6 +43,7 @@ yacl_cc_test(
     srcs = ["prg_test.cc"],
     deps = [
         ":prg",
+        "//yacl/crypto/rand",
     ],
 )
 

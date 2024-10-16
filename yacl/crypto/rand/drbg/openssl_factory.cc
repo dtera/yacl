@@ -20,7 +20,7 @@
 #include <vector>
 
 #include "yacl/base/exception.h"
-#include "yacl/crypto/ossl-provider/helper.h"
+#include "yacl/crypto/ossl_provider/helper.h"
 #include "yacl/secparam.h"
 
 namespace yacl::crypto {
@@ -127,4 +127,7 @@ void OpensslDrbg::ReSeed() {
                                  /* prediction resistance flag */ 1, nullptr,
                                  0) > 0);
 }
+
+REGISTER_DRBG_LIBRARY("OpenSSL", 100, OpensslDrbg::Check, OpensslDrbg::Create);
+
 }  // namespace yacl::crypto
