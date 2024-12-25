@@ -50,6 +50,9 @@ external
 
 #brpc
 rpc_data
+
+.clwb
+cmake-build-debug-remote
 cmake-build-*
 /third_party/include/
 /third_party/lib/
